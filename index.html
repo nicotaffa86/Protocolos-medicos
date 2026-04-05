@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Protocolos San Lucas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #1A5F7A; --primary-dark: #113f52; --secondary: #eef2f5; --danger: #e63946; --success: #2a9d8f; --warning: #e9c46a; --dark: #2b2d42; --bg-color: #f4f7f6; --card-bg: #ffffff; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--dark); line-height: 1.5; }
+        
+        /* PANTALLA DE INICIO */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--secondary) 0%, #ffffff 100%); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #splash-screen img { max-width: 200px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .btn-ingresar { padding: 15px 40px; font-size: 1.2rem; background-color: var(--primary); color: white; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3); transition: transform 0.2s; }
+        .btn-ingresar:active { transform: scale(0.95); }
+
+        header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 20px; font-size: 1.3rem; font-weight: 700; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); }
+        h2 { font-size: 1.2rem; color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 8px; margin-bottom: 15px; }
+        h3 { font-size: 1.05rem; margin-top: 20px; color: var(--primary-dark); border-left: 4px solid var(--primary); padding-left: 8px; }
+        .btn { display: block; width: 100%; padding: 14px; margin-bottom: 12px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.1s; text-align: center; }
+        .btn:active { transform: scale(0.98); }
+        .btn-outline { background-color: transparent; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-back { background-color: transparent; color: #6c757d; border: 1px solid #6c757d; margin-bottom: 20px; width: auto; display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: #f9fafb; }
+        .checkbox-group { display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9rem; }
+        .checkbox-group input { width: auto; margin-right: 10px; transform: scale(1.2); }
+        .alert { padding: 15px; border-radius: 8px; margin-top: 15px; font-weight: 500; display: none; }
+        .alert-success { background-color: #edf7ed; color: #1e4620; border: 1px solid #c8e6c9; }
+        .alert-danger { background-color: #fdeded; color: #5f2120; border: 1px solid #f8d7da; }
+        .alert-info { background-color: #e3f2fd; color: #0d47a1; border: 1px solid #b6d4fe; }
+        .alert-warning { background-color: #fff4e5; color: #663c00; border: 1px solid #ffeeba; }
+        .hidden { display: none !important; }
+        ul { padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 8px; }
+        .note { font-size: 0.85rem; color: #6c757d; font-style: italic; }
+        details { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+        summary { font-weight: 600; color: var(--primary-dark); cursor: pointer; outline: none; list-style: none; font-size: 0.95rem; }
+        summary::-webkit-details-marker { display: none; }
+        summary::before { content: "►"; display: inline-block; margin-right: 8px; font-size: 0.8rem; transition: transform 0.2s; }
+        details[open] summary::before { transform: rotate(90deg); }
+        details p, details ul { margin-top: 10px; font-size: 0.9rem; color: #4a4a4a; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
+        th { background-color: #e9ecef; color: var(--primary-dark); }
+    </style>
+</head>
+<body>
+
+<div id="splash-screen">
+    <img src="logo san lucas.png" alt="Sanatorio San Lucas" onerror="this.style.display='none'">
+    <h2 style="border: none; color: var(--primary-dark); margin-bottom: 30px;">Clínica Médica</h2>
+    <button class="btn-ingresar" onclick="enterApp()">Ingresar</button>
+</div>
+
+<header>Clínica Médica - San Lucas</header>
+
+<div class="container hidden" id="view-menu">
+    <div class="card">
+        <h2>Cardiovascular</h2>
+        <button class="btn btn-outline" onclick="nav('view-sca')">SCA / Dolor Precordial</button>
+        <button class="btn btn-outline" onclick="nav('view-icd')">Insuficiencia Cardíaca (ICD)</button>
+        <button class="btn btn-outline" onclick="nav('view-hta')">Crisis Hipertensiva</button>
+        <button class="btn btn-outline" onclick="nav('view-bradi')">Bradiarritmias</button>
+        <button class="btn btn-outline" onclick="nav('view-taqui')">Taquiarritmias</button>
+        <button class="btn btn-outline" onclick="nav('view-sincope')">Síncope (T-LOC)</button>
+    </div>
+    <div class="card">
+        <h2>Hematología y Vascular</h2>
+        <button class="btn btn-outline" onclick="nav('view-tvp')">Trombosis Venosa Profunda (TVP)</button>
+        <button class="btn btn-outline" onclick="nav('view-tep')">Tromboembolismo Pulmonar (TEP)</button>
+        <button class="btn btn-outline" onclick="nav('view-anemia')">Síndrome Anémico en Urgencias</button>
+    </div>
+    <div class="card">
+        <h2>Respiratorio</h2>
+        <button class="btn btn-outline" onclick="nav('view-disnea')">Disnea Aguda en Guardia</button>
+        <button class="btn btn-outline" onclick="nav('view-epoc-asma')">Exacerbación EPOC y Crisis Asmática</button>
+    </div>
+    <div class="card">
+        <h2>Neurología</h2>
+        <button class="btn btn-outline" onclick="nav('view-tec')">Traumatismo Encéfalo Craneano (TEC)</button>
+        <button class="btn btn-outline" onclick="nav('view-convulsiones')">Convulsiones y Estatus Epiléptico</button>
+        <button class="btn btn-outline" onclick="nav('view-acv')">ACV Isquémico Agudo (Stroke)</button>
+        <button class="btn btn-outline" onclick="nav('view-delirium')">Delirium (Síndrome Confusional)</button>
+    </div>
+    <div class="card">
+        <h2>Nefrología</h2>
+        <button class="btn btn-outline" onclick="nav('view-ira')">Injuria Renal Aguda (IRA)</button>
+    </div>
+    <div class="card">
+        <h2>Endocrinología y Metabolismo</h2>
+        <button class="btn btn-outline" onclick="nav('view-diabetes')">Hiperglucemia y Diabetes (Insulina)</button>
+        <button class="btn btn-outline" onclick="nav('view-cad-ehh')">Crisis Hiperglucémicas (CAD y EHH)</button>
+        <button class="btn btn-outline" onclick="nav('view-hiponatremia')">Hiponatremia</button>
+        <button class="btn btn-outline" onclick="nav('view-hipernatremia')">Hipernatremia</button>
+        <button class="btn btn-outline" onclick="nav('view-hiperkalemia')">Hiperkalemia</button>
+        <button class="btn btn-outline" onclick="nav('view-hipokalemia')">Hipokalemia</button>
+        <button class="btn btn-outline" onclick="nav('view-calcio')">Trastornos del Calcio</button>
+    </div>
+    <div class="card">
+        <h2>Digestivo y Hepatobiliar</h2>
+        <button class="btn btn-outline" onclick="nav('view-sae')">SAE / Ascitis</button>
+        <button class="btn btn-outline" onclick="nav('view-hepatograma')">Alteración del Hepatograma</button>
+        <button class="btn btn-outline" onclick="nav('view-pancreatitis')">Pancreatitis Aguda</button>
+        <button class="btn btn-outline" onclick="nav('view-hda')">Hemorragia Digestiva Alta</button>
+        <button class="btn btn-outline" onclick="nav('view-hdb')">Hemorragia Digestiva Baja</button>
+    </div>
+    <div class="card">
+        <h2>Enfermedades Infecciosas</h2>
+        <button class="btn btn-outline" onclick="nav('view-nac')">NAC (Neumonía de la Comunidad)</button>
+        <button class="btn btn-outline" onclick="nav('view-nih')">NIH / NACS (Neumonía Intrahospitalaria)</button>
+        <button class="btn btn-outline" onclick="nav('view-itu')">ITU (Infección Tracto Urinario)</button>
+        <button class="btn btn-outline" onclick="nav('view-dengue')">Dengue</button>
+        <button class="btn btn-outline" onclick="nav('view-neutropenia')">Neutropenia Febril</button>
+        <button class="btn btn-outline" onclick="nav('view-meningitis')">Meningitis Aguda Bacteriana</button>
+        <button class="btn btn-outline" onclick="nav('view-fod')">Síndrome Febril Prolongado (FOD)</button>
+        <button class="btn btn-outline" onclick="nav('view-ippb')">Infecciones de Piel y Partes Blandas</button>
+        <button class="btn btn-outline" onclick="nav('view-sepsis')">Sepsis y Shock Séptico</button>
+    </div>
+    <div class="card" style="background-color: var(--primary-dark); color: white;">
+        <h2 style="color: white; border-bottom: 2px solid rgba(255,255,255,0.2);">Referencias</h2>
+        <button class="btn btn-outline" style="color: white; border-color: white;" onclick="nav('view-bibliografia')">📚 Bibliografía y Fuentes</button>
+    </div>
+</div>
+
+<div class="container hidden" id="view-anemia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Síndrome Anémico en la Urgencia</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Paso Obligatorio (Guardia):</b> Extraer sangre para Perfil de Hierro (Ferremia, Transferrina, Ferritina), B12, Ácido Fólico y Reticulocitos <b>ANTES</b> de transfundir o administrar hierro. La transfusión borra el diagnóstico etiológico.
+        </div>
+
+        <details open>
+            <summary>1. Enfoque Diagnóstico Inicial (VCM y Reticulocitos)</summary>
+            <ul>
+                <li><b>Microcítica (VCM < 80 fl):</b> Ferropenia (Ferritina < 30 ng/ml es diagnóstica), Talasemia, Anemia de los trastornos crónicos (ATC).</li>
+                <li><b>Macrocítica (VCM > 100 fl):</b> Déficit B12/Fólico (Megaloblástica), Hipotiroidismo, Hepatopatía, SMD, Alcoholismo severo.</li>
+                <li><b>Normocítica (VCM 80-100 fl):</b> Sangrado agudo, Hemólisis, Falla Renal, ATC, Aplasia medular.</li>
+            </ul>
+        </details>
+
+        <h3 style="margin-top:20px;">2. Calculadora Índice de Producción Reticulocitaria (IPR)</h3>
+        <p class="note">Corrige el valor de reticulocitos según el grado de anemia para diferenciar causa central (hiporegenerativa) de periférica (regenerativa).</p>
+        <div class="input-group"><label>Reticulocitos medidos (%):</label><input type="number" id="ipr-retic" step="0.1"></div>
+        <div class="input-group"><label>Hematocrito del paciente (%):</label><input type="number" id="ipr-hto" step="0.1"></div>
+        <button class="btn btn-outline" onclick="calcularIPR()">Calcular IPR</button>
+        <div id="ipr-result" class="alert"></div>
+
+        <details style="margin-top: 25px;">
+            <summary>3. Criterios Transfusionales (Guías AABB / SAH)</summary>
+            <p>La transfusión de Glóbulos Rojos (CGR) se basa en la clínica y comorbilidades, no solo en un número. Transfundir de a 1 unidad y reevaluar clínicamente.</p>
+            <ul>
+                <li><b>Hb < 7 g/dL:</b> Paciente hemodinámicamente estable, crítico (UTI) o no crítico. Umbral estándar restrictivo.</li>
+                <li><b>Hb < 8 g/dL:</b> Paciente con enfermedad cardiovascular preexistente conocida, sometido a cirugía ortopédica mayor o cirugía cardíaca.</li>
+                <li><b>Hb < 9-10 g/dL:</b> No recomendado de rutina. Reservar SOLO para isquemia miocárdica activa (SCA agudo) o inestabilidad hemodinámica manifiesta por hemorragia activa incontrolable.</li>
+            </ul>
+        </details>
+
+        <h3 style="margin-top:25px;">4. Calculadora Déficit de Hierro Endovenoso</h3>
+        <p class="note">Fórmula de Ganzoni. Indicaciones IV: Intolerancia oral severa, EII activa, ERC, falla cardíaca (FEVI < 40%) o necesidad de reposición rápida preoperatoria.</p>
+        <div class="input-group"><label>Peso (kg):</label><input type="number" id="ganzoni-peso"></div>
+        <div class="input-group"><label>Hb Actual (g/dL):</label><input type="number" id="ganzoni-hb" step="0.1"></div>
+        <div class="input-group"><label>Hb Objetivo (g/dL):</label><input type="number" id="ganzoni-obj" value="15" step="0.1"></div>
+        <button class="btn btn-outline" onclick="calcularGanzoni()">Calcular Déficit Total (mg)</button>
+        <div id="ganzoni-result" class="alert"></div>
+
+        <details style="margin-top: 25px;">
+            <summary>5. Reacciones Transfusionales en Guardia</summary>
+            <ul>
+                <li><b>TACO (Sobrecarga Circulatoria):</b> Disnea de inicio agudo, HTA, taquicardia, BNP elevado, infiltrados pulmonares bilaterales (edema hidrostático). Muy frecuente en ancianos y cardiópatas. <br><i>Tratamiento: Detener transfusión. Administrar Furosemida IV y Oxígeno. Sentar al paciente.</i></li>
+                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 8px 0;">
+                <li><b>TRALI (Injuria Pulmonar Aguda):</b> Inicio < 6hs post-transfusión, fiebre, hipotensión grave, hipoxemia refractaria, infiltrados bilaterales (edema no cardiogénico). <br><i>Tratamiento: Oxigenoterapia / ARM. Fluidos. <b>Prohibidos los diuréticos</b> (empeoran el shock).</i></li>
+                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 8px 0;">
+                <li><b>Reacción Hemolítica Aguda:</b> Incompatibilidad ABO (error humano). Tríada: Fiebre/escalofríos, dolor lumbar intenso, hemoglobinuria (orina oscura). Hipotensión de rápido progreso. <br><i>Tratamiento: Detener transfusión INMEDIATAMENTE. Expansión agresiva con SF IV para mantener diuresis y proteger el riñón. Avisar a Hemoterapia.</i></li>
+                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 8px 0;">
+                <li><b>Reacción Febril No Hemolítica:</b> Aumento de temperatura ≥ 1°C. Es la complicación más común. Diagnóstico de exclusión (descartar siempre hemólisis aguda). <br><i>Tratamiento: Paracetamol VO/IV. (No se pre-medica con antitérmicos rutinariamente).</i></li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-tec">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Traumatismo Encéfalo Craneano (TEC)</h2>
+        
+        <h3>1. Calculadora Escala de Glasgow (GCS)</h3>
+        <p class="note">Evaluar siempre después del ABCDE y excluyendo intoxicaciones por alcohol/drogas.</p>
+        <div class="input-group"><label>Apertura Ocular:</label>
+            <select id="gcs-o"><option value="4">4 - Espontánea</option><option value="3">3 - A la orden verbal</option><option value="2">2 - Al estímulo doloroso</option><option value="1">1 - Ninguna</option></select>
+        </div>
+        <div class="input-group"><label>Respuesta Verbal:</label>
+            <select id="gcs-v"><option value="5">5 - Orientado y conversando</option><option value="4">4 - Desorientado / Confuso</option><option value="3">3 - Palabras inapropiadas</option><option value="2">2 - Sonidos incomprensibles</option><option value="1">1 - Ninguna</option></select>
+        </div>
+        <div class="input-group"><label>Respuesta Motora:</label>
+            <select id="gcs-m"><option value="6">6 - Obedece órdenes</option><option value="5">5 - Localiza el dolor</option><option value="4">4 - Retirada al dolor</option><option value="3">3 - Flexión anormal (Decorticación)</option><option value="2">2 - Extensión anormal (Descerebración)</option><option value="1">1 - Ninguna</option></select>
+        </div>
+        <button class="btn btn-outline" onclick="calcularGlasgow()">Calcular GCS</button>
+        <div id="gcs-result" class="alert"></div>
+
+        <details style="margin-top:20px;" open>
+            <summary>2. Manejo del TEC Leve (GCS 13-15)</summary>
+            <div class="alert alert-warning" style="display:block; margin-bottom:10px;">
+                ⚠️ <b>Regla de Oro:</b> No pedir TC de cerebro de rutina. Indicar SOLO si cumple un criterio de la "Canadian CT Head Rule". Pacientes anticoagulados exigen TC SIEMPRE.
+            </div>
+            <ul>
+                <li><b>Criterios TC (Canadian Rule):</b> GCS < 15 a las 2hs, fractura evidente/base de cráneo, vómitos ≥ 2, > 65 años, amnesia > 30 min, mecanismo peligroso.</li>
+                <li><b>Observación:</b> 4 a 6 horas en guardia si hubo pérdida de conocimiento o amnesia.</li>
+                <li><b>Analgesia:</b> Paracetamol 1g VO. 🛑 <b>CONTRAINDICADOS los AINEs</b> en las primeras 24 hs (riesgo de sangrado) y opiáceos (alteran sensorio).</li>
+                <li><b>Alta:</b> GCS 15, TC normal (si aplicaba), cuidador responsable y pautas de alarma escritas (somnolencia, vómitos, asimetría pupilar).</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>3. Manejo del TEC Moderado y Grave</summary>
+            <ul>
+                <li><b>Estabilización (Prevenir injuria secundaria):</b> SatO2 > 90%, PaO2 > 60 mmHg. PAS > 100 mmHg (50-69 años) o > 110 mmHg (> 70 años). Cabecera a 30°.</li>
+                <li><b>Hipertensión Endocraneana (Signos de herniación):</b> Manitol 20% (0.5-1 g/kg IV en 20 min) o Solución Hipertónica 3% (250 ml bolo).</li>
+                <li><b>Anticonvulsivantes:</b> Fenitoína/Levetiracetam solo primeros 7 días para prevenir crisis tempranas en TEC grave o lesión estructural.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-convulsiones">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Convulsiones y Estatus Epiléptico</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Estatus Epiléptico:</b> Crisis continua de ≥ 5 min, O dos o más crisis sin recuperación del sensorio. Emergencia neurológica absoluta.
+        </div>
+        <details open><summary>1. Abordaje Diagnóstico en Guardia</summary>
+            <ul>
+                <li><b>Primer Episodio:</b> Laboratorio completo (Ca, Mg, tóxicos). <b>TC de Cerebro sin contraste OBLIGATORIA</b>. PL solo si hay fiebre/inmunosupresión.</li>
+                <li><b>Epilepsia Conocida:</b> Dosaje de drogas antiepilépticas. <b>NO pedir TC de rutina</b> salvo trauma evidente, foco nuevo o sensorio deprimido prolongado.</li>
+            </ul>
+        </details>
+        <h3 style="margin-top: 20px;">2. Cronograma Terapéutico (Time is Brain)</h3>
+        <details open>
+            <summary>0 - 5 min (Estabilización)</summary>
+            <p>ABC, O2. <b>Glucemia capilar OBLIGATORIA</b> (Si < 60: Dx 50% + Tiamina 100mg IV).</p>
+        </details>
+        <details open>
+            <summary>5 - 20 min (Fase Inicial)</summary>
+            <p><b>Elección:</b> Lorazepam 0.1 mg/kg IV (máx 4 mg). Alternativa IV: Diazepam 0.15 mg/kg. <b>Sin vía IV:</b> Midazolam 10 mg INTRAMUSCULAR.</p>
+        </details>
+        <details open>
+            <summary>20 - 40 min (Fase de Control / 2da Línea)</summary>
+            <p style="color:var(--danger); font-weight:600;">⚠️ Administrar SIEMPRE aunque la crisis haya cedido con Benzodiacepinas.</p>
+            <ul>
+                <li><b>Levetiracetam:</b> 60 mg/kg IV en 15 min (Máx 4500 mg).</li>
+                <li><b>Fenitoína:</b> 20 mg/kg IV. <b>CRÍTICO:</b> Diluir SOLO en Solución Fisiológica, ritmo máx 50 mg/min por riesgo de hipotensión/arritmias. Monitoreo ECG.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-bibliografia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Bibliografía y Fuentes Clínicas</h2>
+        <p class="note" style="margin-bottom: 20px;">Los protocolos de esta aplicación fueron elaborados y adaptados para el Sanatorio San Lucas basándose en las siguientes guías de práctica clínica, consensos nacionales e internacionales, y evidencia médica actualizada.</p>
+
+        <details open>
+            <summary>Cardiología y Vascular</summary>
+            <ul>
+                <li><b>SCA:</b> <i>2023 ESC Guidelines for the management of acute coronary syndromes.</i> European Heart Journal.</li>
+                <li><b>Insuficiencia Cardíaca:</b> <i>2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure.</i></li>
+                <li><b>TEP:</b> <i>2026 AHA/ACC/ACCP/ACEP/CHEST/SCAI/SHM/SIR/SVM/SVN Guideline for the Evaluation and Management of Acute Pulmonary Embolism in Adults.</i> Circulation, 2026.</li>
+                <li><b>TVP:</b> <i>American Society of Hematology (ASH) 2020 guidelines for management of venous thromboembolism.</i></li>
+                <li><b>Crisis Hipertensiva:</b> <i>2024 ESC/ESH Guidelines for the management of arterial hypertension.</i></li>
+                <li><b>Arritmias y Síncope:</b> <i>AHA/ACC/HRS Guidelines</i> vigentes.</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Neurología y Neurocrítico</summary>
+            <ul>
+                <li><b>ACV Isquémico:</b> <i>AHA/ASA Guidelines for the Early Management of Patients With Acute Ischemic Stroke</i> (Act. 2026).</li>
+                <li><b>Convulsiones / Estatus:</b> <i>American Epilepsy Society (AES): Guidelines for the Evaluation and Management of Status Epilepticus.</i> / ILAE / LACE.</li>
+                <li><b>Trauma Craneal (TEC):</b> <i>Brain Trauma Foundation (BTF): Guidelines for the Management of Severe TBI.</i> / ATLS 11va Ed. / SATI.</li>
+                <li><b>Delirium:</b> <i>Clinical Practice Guidelines for PADIS.</i></li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Hematología y Medicina Transfusional</summary>
+            <ul>
+                <li><b>Anemias y Hierro Endovenoso:</b> <i>American Society of Hematology (ASH): Guidelines for management of anemia.</i> / Sociedad Argentina de Hematología (SAH).</li>
+                <li><b>Medicina Transfusional:</b> <i>AABB Clinical Practice Guidelines</i> / <i>ISBT (Reacciones Transfusionales TACO/TRALI).</i></li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Enfermedades Infecciosas</summary>
+            <ul>
+                <li><b>Consensos SADI:</b> Neumonía (NAC), Infecciones Urinarias (ITU), Infecciones de Piel y Neutropenia Febril.</li>
+                <li><b>Sepsis:</b> <i>Surviving Sepsis Campaign: 2021.</i></li>
+                <li><b>Dengue:</b> <i>Guías de Manejo del Ministerio de Salud de la Nación Argentina / OPS.</i></li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Endocrinología, Metabolismo y Nefrología</summary>
+            <ul>
+                <li><b>Diabetes y Crisis Hiperglucémicas:</b> <i>ADA Standards of Care in Diabetes 2024.</i> / SAD.</li>
+                <li><b>Injuria Renal Aguda:</b> <i>KDIGO Clinical Practice Guideline.</i></li>
+                <li><b>Sodio:</b> <i>European Clinical Practice Guideline on hyponatraemia.</i></li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Respiratorio y Digestivo</summary>
+            <ul>
+                <li><b>EPOC y Asma:</b> <i>GOLD Report 2024</i> / <i>GINA Strategy 2024.</i></li>
+                <li><b>Disnea:</b> <i>The Dyspnea Clinic: a new emerging interdisciplinary medical concept.</i> European Journal of Heart Failure, 2026.</li>
+                <li><b>Hemorragia Digestiva:</b> <i>ACG Clinical Guideline (HDA)</i> / <i>BSG guidelines (HDB - Score de Oakland).</i></li>
+                <li><b>Pancreatitis Aguda:</b> <i>Clasificación Modificada de Atlanta.</i></li>
+                <li><b>Cirrosis:</b> <i>EASL Clinical Practice Guidelines.</i></li>
+            </ul>
+        </details>
+        
+        <div style="margin-top: 20px; font-size: 0.8rem; color: #6c757d; text-align: center;">
+            <p>Versión 1.3 - Elaborado para el Sanatorio San Lucas.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-sca">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Evaluación del Dolor Precordial y SCA</h2>
+        
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>FASE 1: Acción Inmediata (Regla de los 10 min)</b><br>
+            Todo dolor torácico debe tener un <b>ECG de 12 derivaciones en < 10 min</b>.<br>
+            - <i>Con Supradesnivel ST (IAMCEST):</i> Fin de algoritmo. Activar Hemodinamia.<br>
+            - <i>Sin Supradesnivel ST / Normal:</i> Marcadores bioquímicos (Troponina).
+        </div>
+
+        <details open>
+            <summary>Estratificación Bioquímica (hs-cTnT 0/1h)</summary>
+            <p class="note">Usar Troponina T de alta sensibilidad (Roche Elecsys).</p>
+            <div class="input-group"><label>Valor 0h (ng/L):</label><input type="number" id="trop0"></div>
+            <div class="input-group"><label>Valor 1h (ng/L):</label><input type="number" id="trop1"></div>
+            <div class="input-group"><label>Inicio del dolor > 3 hs?</label><select id="dolor3h"><option value="si">Sí</option><option value="no">No</option></select></div>
+            <button class="btn btn-outline" onclick="calcularTroponina()">Evaluar Conducta</button>
+            <div id="trop-result" class="alert"></div>
+        </details>
+
+        <h3 style="margin-top: 25px;">Medidas Generales Inmediatas (Guardia)</h3>
+        <div class="alert alert-warning" style="display:block; margin-bottom:15px;">
+            <b>⚠️ El acrónimo "MONA" está desaconsejado (ESC 2023).</b>
+        </div>
+        <ul>
+            <li><b>Aspirina (AAS):</b> 300 mg masticables a todos.</li>
+            <li><b>Oxígeno:</b> SOLO si SatO2 < 90%. <i>La hiperoxia causa vasoconstricción coronaria y aumenta el tamaño del infarto.</i></li>
+            <li><b>Nitroglicerina (NTG):</b> SL o IV. <b>Contraindicada</b> si PAS < 90, IAM de Ventrículo Derecho (ST en derivadas inferiores + V3R/V4R), o uso de Sildenafil (< 24h) / Tadalafilo (< 48h).</li>
+            <li><b>Morfina:</b> Evitar uso rutinario. Retrasa la absorción de Ticagrelor/Clopidogrel. Reservar solo para dolor inmanejable con NTG.</li>
+        </ul>
+
+        <details style="margin-top: 15px;">
+            <summary>Algoritmo SCACEST (Con Supradesnivel ST)</summary>
+            <p><b>Objetivo: REPERFUSIÓN RÁPIDA.</b></p>
+            <ul>
+                <li><b>ATC Primaria:</b> Elección si se puede hacer inflado de balón en < 90 min.</li>
+                <li><b>Trombolisis:</b> Si ATC demora > 120 min, administrar en los primeros 10 min (Alteplase/Estreptoquinasa).</li>
+                <li><b>Inhibidor P2Y12:</b> <br>- <i>ATC:</i> Ticagrelor 180 mg o Prasugrel 60 mg. (Alternativa: Clopidogrel 600 mg).<br>- <i>Trombolisis (≤ 75 años):</i> Clopidogrel 300 mg.<br>- <i>Trombolisis (> 75 años):</i> Clopidogrel 75 mg (SIN carga).</li>
+                <li><b>Anticoagulación:</b> HNF IV o Enoxaparina.</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Algoritmo SCASEST (Sin Supradesnivel ST)</summary>
+            <p style="color:var(--danger); font-weight:600;">⚠️ Cambio de paradigma (ESC 2023): NO se recomienda el pretratamiento rutinario con inhibidor P2Y12 antes de la cinecoronariografía (CCG) temprana.</p>
+            <ul>
+                <li><b>Anticoagulación OBLIGATORIA al diagnóstico:</b> Enoxaparina 1 mg/kg SC c/12h.</li>
+                <li><b>Estratificación para CCG:</b><br>- <i>Muy Alto Riesgo (< 2 hs):</i> Inestabilidad, dolor refractario, arritmias letales.<br>- <i>Alto Riesgo (< 24 hs):</i> Troponinas +, ST dinámico, GRACE > 140.<br>- <i>Bajo Riesgo:</i> Evaluar con pruebas funcionales / Angio-TC previo al alta.</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>Tratamiento Médico en UCO/Sala (Mantenimiento)</summary>
+            <ul>
+                <li><b>DAPT:</b> AAS 100 mg + P2Y12 por 12 meses (salvo alto riesgo de sangrado).</li>
+                <li><b>Estatinas:</b> Rosuvastatina 20-40 mg o Atorvastatina 40-80 mg a TODOS. Objetivo LDL < 55 mg/dL.</li>
+                <li><b>Betabloqueantes:</b> Iniciar en primeras 24h si no hay signos de insuficiencia cardíaca aguda/shock.</li>
+                <li><b>IECA/ARA-II:</b> Indicados si hay HTA, DBT, ERC o FEVI < 40%.</li>
+                <li><b>ARM:</b> (Espironolactona) Si FEVI ≤ 40% con síntomas o DBT.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-icd">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Insuficiencia Cardíaca Descompensada (ICD)</h2>
+        <details>
+            <summary>1. Descartar causas mortales (CHAMP)</summary>
+            <p>SCA, Hipertensión (Emergencia), Arritmias, Mecánicas, TEP. <br><i>Solicitar ECG < 10 min, Rx Tórax, NT-proBNP y Troponinas.</i></p>
+        </details>
+        <div class="alert alert-info" style="display:block; margin-bottom:15px;">
+            <b>Perfil Caliente y Húmedo (80%):</b> Bien perfundido, pero congestionado.
+        </div>
+        <details open>
+            <summary>2. Tratamiento Perfil Caliente/Húmedo (Regla L-N-N)</summary>
+            <ul>
+                <li><b>L - Lasix (Furosemida IV):</b><br>- Virgen de tratamiento: 20-40 mg IV bolo.<br>- Ya tomaba: Igualar o duplicar dosis oral diaria, en bolo IV (Ej: tomaba 40/día, dar 40-80 IV).<br>- Revaluar a 2hs: Buscar ritmo diurético >100-150 ml/h. Si no, duplicar dosis.</li>
+                <li><b>N - Nitratos (Nitroglicerina IV):</b><br>- Indicado en EAP hipertensivo (PAS > 110).<br>- Infusión 10-20 mcg/min, titular al alza cada 5 min.</li>
+                <li><b>N - VNI (Soporte No Invasivo):</b><br>- Indicación precoz en EAP, tiraje, taquipnea >25 o acidosis. Disminuye pre/poscarga y evita intubación.</li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Perfil Frío y Húmedo (Shock Cardiogénico):</b> Hipoperfusión + Congestión. Evitar betabloqueantes. Pase a UCO.
+        </div>
+        <details>
+            <summary>Soporte Inotrópico y Vasopresor (UCO)</summary>
+            <table>
+                <tr><th>Fármaco</th><th>Tipo</th><th>Indicación</th><th>Precauciones</th></tr>
+                <tr><td><b>Noradrenalina</b></td><td>Vasopresor 1° línea</td><td>Hipotensión severa (PAS<85) para asegurar perfusión coronaria.</td><td>Aumenta postcarga. No mejora gasto cardíaco sola.</td></tr>
+                <tr><td><b>Dobutamina</b></td><td>Inotrópico 1° línea</td><td>Hipoperfusión tisular con PA estable. Mejora VMC.</td><td>Vasodilatadora (hipotensión inicial). Arritmogénica.</td></tr>
+                <tr><td><b>Milrinona</b></td><td>Ino-dilatador</td><td>Uso crónico de BB o falla ventricular derecha (HTP).</td><td>Vida media renal. CI en hipotensión sin vasopresores previos.</td></tr>
+            </table>
+        </details>
+        <details>
+            <summary>3. Optimización al Alta (GDMT - Guías AHA)</summary>
+            <p>Evaluar previo al alta en pacientes secos y estables (FEVI < 40%):</p>
+            <ul>
+                <li><b>ARNI (Sacubitrilo/Valsartán):</b> Prioritario si tolera vasodilatación (PAS>100). Dosis inicio 24/26 mg c/12h. (Alternativa: Enalapril/Losartán).</li>
+                <li><b>iSGLT2 (Dapagliflozina/Empagliflozina 10mg):</b> Indicado en todo espectro de FEVI. Cuidado si ClCr < 20-25.</li>
+                <li><b>Betabloqueantes (Bisoprolol/Carvedilol):</b> Iniciar SOLO si el paciente está 100% seco y sin requerir inotrópicos.</li>
+                <li><b>ARM (Espironolactona):</b> Si persiste sintomático. Vigilar Potasio > 5.0 y ClCr < 30.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hta">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Crisis Hipertensiva (Urgencia vs. Emergencia)</h2>
+        <details open>
+            <summary>1. Urgencia Hipertensiva (Sin Daño de Órgano Blanco)</summary>
+            <p>Elevación severa sin DAOB. Requiere reducción gradual (24-48 hs) con medicación Vía Oral.</p>
+            <ul>
+                <li>⚠️ <b>REGLA DE ORO:</b> NO usar Nifedipina sublingual ni fármacos de acción brusca.</li>
+                <li><b>Manejo:</b> Reposo por 30-60 min. Reiniciar o ajustar medicación habitual. Si es virgen: Enalapril 10mg, Amlodipina 5-10mg o Labetalol 100-200mg VO.</li>
+                <li><b>Objetivo:</b> < 160/100 mmHg en horas/días.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>2. Emergencia Hipertensiva (Con Daño de Órgano Blanco)</summary>
+            <p>Sospecha: Déficit focal neurológico, dolor torácico, disnea, oliguria, o papiledema. <i>(ECG, Rx, Función Renal, Troponinas).</i></p>
+            <p><b>Objetivo General:</b> Reducir PAM no más del 20-25% en 1° hora, luego a 160/100 en 2-6 hs con FÁRMACOS IV.</p>
+            <table style="margin-top: 10px;">
+                <tr><th>Excepciones (Cuadro)</th><th>Objetivo / Manejo</th></tr>
+                <tr><td><b>Disección Aórtica</b></td><td>Descenso drástico en < 20 min (PAS < 120, FC < 60). Labetalol + Nitroprusiato.</td></tr>
+                <tr><td><b>ACV Isquémico</b></td><td>NO reducir salvo PAS > 220 o > 185 (si va a trombolítico). Labetalol IV.</td></tr>
+                <tr><td><b>ACV Hemorrágico</b></td><td>PAS objetivo ~140 mmHg. Labetalol IV.</td></tr>
+                <tr><td><b>EAP / Isquemia Mioc.</b></td><td>Nitroglicerina IV. (Contraindicado Nitroprusiato en isquemia).</td></tr>
+            </table>
+        </details>
+        <details>
+            <summary>3. Dosis de Drogas IV</summary>
+            <ul>
+                <li><b>Labetalol:</b> Bolo 20 mg en 2 min. Repetir 20-80 mg c/10 min (máx 300 mg). Infusión: 0.5-2 mg/min.</li>
+                <li><b>Nitroglicerina:</b> Infusión 5-10 mcg/min, aumentando 5 mcg c/5 min.</li>
+                <li><b>Nitroprusiato:</b> Infusión 0.25-0.5 mcg/kg/min (Requiere monitoreo invasivo estricto).</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-bradi">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Bradiarritmias en la Urgencia (FC < 50)</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Criterios de Inestabilidad (AHA):</b><br>
+            Hipotensión (<90), Alteración aguda del sensorio, Signos de shock, Dolor torácico isquémico, Insuficiencia cardíaca aguda.<br>
+            <i>Si presenta UNO, requiere acción inmediata.</i>
+        </div>
+        <details open>
+            <summary>Paciente INESTABLE (Algoritmo)</summary>
+            <ul>
+                <li><b>1° Línea (Atropina):</b> 1 mg IV en bolo rápido (AHA 2020). Repetir c/3-5 min (máx 3 mg). <i>Ineficaz en trasplantados cardíacos.</i></li>
+                <li><b>2° Línea (Si Atropina falla o Bloqueos Alto Grado):</b><br>
+                    - <b>Marcapasos Transcutáneo (MTC):</b> De elección inicial. Corroborar captura eléctrica y mecánica (pulso femoral).<br>
+                    - <b>Infusiones Cronotrópicas:</b> Obligatorias si MTC no funciona o no hay. Dopamina (5-20 mcg/kg/min) o Adrenalina (2-10 mcg/min).<br>
+                    - <b>Marcapasos Transvenoso:</b> Puente al definitivo, no debe retrasar inotrópicos.
+                </li>
+            </ul>
+        </details>
+        <details>
+            <summary>Paciente ESTABLE</summary>
+            <ul>
+                <li>Monitoreo continuo 12 derivaciones.</li>
+                <li>Buscar causas reversibles: Isquemia (IAM inferior), fármacos (Betabloqueantes, Calcioantagonistas, Digoxina), Hiperkalemia, Hipotiroidismo severo.</li>
+                <li>Interconsulta con Cardiología.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-taqui">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Taquiarritmias en la Urgencia (FC > 150)</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>REGLA DE ORO (Inestabilidad):</b><br>
+            Si hay Hipotensión, Shock, Isquemia, Sensorio alterado o Falla Cardíaca ➔ <b>Cardioversión Eléctrica Sincronizada Inmediata</b> (Independiente del QRS).<br>
+            <i>Excepto FV/TV sin pulso: Desfibrilación.</i>
+        </div>
+        <details open>
+            <summary>Paciente ESTABLE - QRS ESTRECHO (< 0.12s)</summary>
+            <p><b>A. Regular (TPSV):</b></p>
+            <ul>
+                <li>1° Maniobras Vagales (Valsalva modificada).</li>
+                <li>2° Adenosina: 6 mg IV rápido (seguido de bolo 20ml SF). Si no revierte, 12 mg IV.</li>
+            </ul>
+            <p><b>B. Irregular (FA / Aleteo):</b></p>
+            <ul>
+                <li><b>Control FC:</b> Betabloqueantes o Diltiazem. <i>(Evitar Diltiazem si hay disfunción ventricular o IC aguda).</i></li>
+                <li><b>Cardioversión Farmacológica:</b> NO usar Amiodarona si la FA tiene >48hs por riesgo de ACV, salvo compromiso hemodinámico.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Paciente ESTABLE - QRS ANCHO (≥ 0.12s)</summary>
+            <p>Asumir SIEMPRE Taquicardia Ventricular (TV) hasta que se demuestre lo contrario.</p>
+            <ul>
+                <li><b>Amiodarona (TV Monomorfa):</b> 150 mg IV a pasar en 10 minutos (1 amp en 100ml Dx5%). Repetir si es necesario.</li>
+                <li>Si no revierte y se vuelve inestable ➔ Cardioversión eléctrica.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-sincope">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Síncope y Pérdida Transitoria del Conocimiento</h2>
+        <details open>
+            <summary>1. Abordaje Inicial</summary>
+            <p>Pérdida transitoria debida a hipoperfusión cerebral global (inicio rápido, corta duración, recuperación ad integrum).</p>
+            <ul>
+                <li><b>Anamnesis:</b> Pródromos, postura, esfuerzo. Diferenciar de convulsión (estado post-ictal).</li>
+                <li><b>Examen Físico:</b> OBLIGATORIO medir Presión Arterial Ortostática. (Caída PAS ≥ 20 o PAD ≥ 10 a los 1-3 min de bipedestación confirma Hipotensión Ortostática).</li>
+                <li><b>ECG 12 derivaciones:</b> Obligatorio para TODO paciente.</li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>⚠️ Prácticas Desaconsejadas en la Guardia:</b><br>
+            ESTÁ CONTRAINDICADO el uso rutinario de TC de cerebro, RMN, EEG o Eco-Doppler de Vasos de Cuello en síncope no complicado. <i>Solo neuroimágenes si hay foco neurológico o TEC grave secundario a la caída.</i>
+        </div>
+        <h3>2. Estratificación de Riesgo (Banderas Rojas)</h3>
+        <details open>
+            <summary>Criterios de ALTO RIESGO</summary>
+            <ul>
+                <li><b>Clínicos:</b> Síncope en esfuerzo o supino. Inicio súbito sin pródromos. Historia familiar de muerte súbita. Cardiopatía estructural severa conocida (IC, estenosis aórtica).</li>
+                <li><b>ECG:</b> Bradicardia sinusal < 50 persistente, pausas > 3 seg. Bloqueo Bifascicular. Isquemia. QTc > 460 o < 340. Brugada tipo 1. Preexcitación (WPW).</li>
+            </ul>
+        </details>
+        <h3 style="margin-top: 25px;">3. Algoritmo de Conducta</h3>
+        <ul>
+            <li><b>A. Pacientes de ALTO RIESGO:</b><br>Internación INMEDIATA en UCO/Telemetría. Monitoreo ECG continuo y Ecocardiograma Doppler.</li>
+            <li style="margin-top: 8px;"><b>B. RIESGO INTERMEDIO / INDETERMINADO:</b><br>Añosos, múltiples comorbilidades. Unidad de Observación (EDOU) por 6 a 24 horas. Si no repite y biomarcadores son negativos -> Alta con seguimiento.</li>
+            <li style="margin-top: 8px;"><b>C. BAJO RIESGO (Vasovagal / Ortostático):</b><br>Jóvenes, pródromos claros, desencadenante típico, ECG normal. ALTA DIRECTA desde la guardia con educación y pautas de alarma. No requieren imágenes.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="container hidden" id="view-tvp">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Trombosis Venosa Profunda (TVP)</h2>
+        <div class="alert alert-warning" style="display:block; margin-bottom:15px;">
+            ⚠️ Queda formalmente desaconsejada la solicitud de Ecodoppler Venoso sin dejar asentado el Score de Wells en la historia clínica.
+        </div>
+        <h3>1. Calculadora Score de Wells (TVP)</h3>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-cancer"> <label>Cáncer activo (tratamiento o paliativo en últimos 6 meses) <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-paralisis"> <label>Parálisis, paresia o inmovilización reciente con yeso de MMII <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-postracion"> <label>Postración > 3 días o cirugía mayor en las últimas 12 semanas <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-dolor"> <label>Dolor localizado en el trayecto del sistema venoso profundo <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-edema"> <label>Edema de todo el miembro inferior <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-pantorrilla"> <label>Aumento diámetro pantorrilla > 3 cm (respecto asintomática) <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-fovea"> <label>Edema con fóvea (mayor en el lado sintomático) <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-venas"> <label>Venas superficiales colaterales no varicosas <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-previa"> <label>TVP documentada previamente <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtvp-alt"> <label>Diagnóstico alternativo más probable que la TVP <b>(-2)</b></label></div>
+        <button class="btn btn-outline" onclick="calcularWellsTVP()" style="margin-top:10px;">Calcular Score y Conducta</button>
+        <div id="wtvp-result" class="alert"></div>
+
+        <details style="margin-top: 20px;" open>
+            <summary>2. Manejo Clínico y Criterios de Internación</summary>
+            <ul>
+                <li><b>Manejo Ambulatorio (De Elección):</b> La inmensa mayoría de las TVP no complicadas se tratan de forma ambulatoria. La movilización precoz es segura y reduce el edema posflebítico.</li>
+                <li><b>Criterios Estrictos de Internación:</b><br>
+                    - Alto riesgo de sangrado activo.<br>
+                    - Flegmasia cerúlea dolens (TVP iliofemoral masiva con isquemia arterial). <i>Alerta a Cirugía Vascular.</i><br>
+                    - Dolor severo refractario a analgésicos orales.<br>
+                    - Falla renal severa (ClCr < 15 mL/min) que obligue a usar HNF IV.
+                </li>
+            </ul>
+        </details>
+        <details open>
+            <summary>3. Tratamiento Farmacológico</summary>
+            <ul>
+                <li><b>Primera Línea:</b> Anticoagulantes Orales Directos (DOACs: Apixabán o Rivaroxabán) desde el día 1, sin necesidad de puente con heparina inyectable.</li>
+                <li><b>Excepciones (Requieren Dicumarínicos o HBPM exclusiva):</b> Síndrome Antifosfolípido (SAF) severo, insuficiencia renal terminal, prótesis mecánica o embarazo.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-tep">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Tromboembolismo Pulmonar (TEP)</h2>
+        <p class="note">Guías AHA/ACC 2026. La sospecha clínica debe objetivarse siempre antes de solicitar imágenes.</p>
+        <h3>1. Score de Wells para TEP</h3>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-tvp"> <label>Signos y síntomas clínicos de TVP <b>(+3.0)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-alt"> <label>Diagnóstico alternativo menos probable que el TEP <b>(+3.0)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-fc"> <label>Frecuencia cardíaca > 100 lpm <b>(+1.5)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-inmov"> <label>Inmovilización > 3 días o cirugía en últimas 4 sem. <b>(+1.5)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-previa"> <label>TEP o TVP previa <b>(+1.5)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-hemoptisis"> <label>Hemoptisis <b>(+1.0)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="wtep-cancer"> <label>Cáncer activo <b>(+1.0)</b></label></div>
+        <button class="btn btn-outline" onclick="calcularWellsTEP()" style="margin-top:10px;">Calcular Score Wells TEP</button>
+        <div id="wtep-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">2. Estratificación Clínica (sPESI)</h3>
+        <p class="note">Todo TEP confirmado por imagen debe estadificarse inmediatamente para definir su gravedad y lugar de internación.</p>
+        <div class="checkbox-group"><input type="checkbox" id="spesi-edad"> <label>Edad > 80 años <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="spesi-cancer"> <label>Historia de Cáncer <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="spesi-ic"> <label>Historia de Insuficiencia Cardíaca o EPOC <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="spesi-fc"> <label>Frecuencia Cardíaca ≥ 110 lpm <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="spesi-pas"> <label>Presión Arterial Sistólica < 100 mmHg <b>(+1)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="spesi-sat"> <label>Saturación de O2 < 90% (aire ambiente) <b>(+1)</b></label></div>
+        <button class="btn btn-outline" onclick="calcularSPESI()" style="margin-top:10px;">Calcular sPESI</button>
+        <div id="spesi-result" class="alert"></div>
+
+        <details style="margin-top: 25px;" open>
+            <summary>3. Clasificación de Severidad y Conducta (AHA 2026)</summary>
+            <p style="color:var(--danger); font-size: 0.85rem; font-weight: 600;">⚠️ Prohibido el uso de los términos "Masivo / Submasivo".</p>
+            <ul>
+                <li><b>Categoría A y B (Baja Severidad):</b><br>Asintomáticos o con sPESI = 0, sin disfunción del VD ni troponinas elevadas. <i>Conducta: Alta temprana (< 24 hs) o manejo ambulatorio. Iniciar DOACs.</i></li>
+                <hr>
+                <li><b>Categoría C (Severidad Elevada):</b> Estables pero con sPESI ≥ 1.<br>
+                    - <b>C1:</b> VD normal y biomarcadores normales.<br>
+                    - <b>C2:</b> Disfunción VD <b>O</b> biomarcadores positivos.<br>
+                    <i>Conducta C1/C2: Internación en Sala. Anticoagulación HBPM o DOACs.</i><br>
+                    - <b>C3:</b> Disfunción VD <b>Y</b> biomarcadores positivos.<br>
+                    <i>Conducta C3: Internación en UTI/UCO. Iniciar Heparina No Fraccionada (HNF) IV.</i>
+                </li>
+                <hr>
+                <li><b>Categoría D (Falla Cardiopulmonar Incipiente):</b><br>Shock normotensivo (Ej. Lactato > 2) o hipotensión transitoria. <i>Conducta: UTI/UCO. PERT. Considerar Trombectomía Mecánica. NO trombolizar de rutina.</i></li>
+                <hr>
+                <li><b>Categoría E (Falla Cardiopulmonar Establecida):</b><br>Hipotensión persistente (PAS < 90), shock refractario o paro. <i>Conducta: Shock Room. Trombolisis Sistémica Inmediata (Alteplase).</i></li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-disnea">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Disnea Aguda en Guardia (Mapa Conceptual)</h2>
+        <div style="border-left: 4px solid var(--danger); padding-left: 10px; margin-bottom: 15px;">
+            <h4 style="margin:0 0 5px 0; color:var(--danger);">NIVEL 1: Triage y Estabilización (ABCDE)</h4>
+            <p style="margin:0; font-size: 0.9rem;">
+                <b>Signos de Falla Inminente:</b> Uso de músculos accesorios, cianosis, SatO2 < 88% refractaria, alteración del sensorio, inestabilidad hemodinámica.<br>
+                <b>Acción:</b> Soporte vital (VNI / Intubación), acceso venoso, monitorización.
+            </p>
+        </div>
+        <details open>
+            <summary>NIVEL 2: La "Hora de Oro" (Búsqueda de 3 Ejes)</summary>
+            <ul>
+                <li><b>Eje Clínico:</b><br>
+                    - ¿Fiebre/Tos? ➔ Sospecha Infecciosa.<br>
+                    - ¿Ortopnea/DPN? ➔ Sospecha Cardiológica.<br>
+                    - ¿Dolor Torácico/Reposo? ➔ Sospecha TEP/IAM.<br>
+                    - ¿Sibilancias? ➔ Sospecha EPOC/Asma.
+                </li>
+                <li><b>Eje Eléctrico:</b> ECG 12 derivaciones (< 10 min) para descartar SCA, arritmias, bloqueos, o S1Q3T3.</li>
+                <li><b>Eje Laboratorio/Imágenes:</b> Rx de Tórax F/P. <b>NT-proBNP</b> (regla de exclusión: si < 300 pg/mL, descarta IC aguda con 98% de VPN). Gases/Lactato si Sat < 90%.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>NIVEL 3: Ramificación Diagnóstica</summary>
+            <ul>
+                <li><b>Rama A (Pulmonar):</b><br>- Fiebre/Infiltrado: Protocolo NAC (CURB-65).<br>- Broncoespasmo: Corticoides + Broncodilatadores.<br>- Rx limpia + Hipoxemia severa: Sospecha TEP (Angio-TC).</li>
+                <li><b>Rama B (Cardiológica):</b><br>- Congestión Rx + NT-proBNP alto: IC Aguda (Diuréticos, Vasodilatadores).<br>- Isquemia ECG: Protocolo SCA.</li>
+                <li><b>Rama C (Otras):</b> Acidosis metabólica (Kussmaul), Anemia severa.</li>
+            </ul>
+        </details>
+        <details>
+            <summary>NIVEL 4: Disnea "Gris" o No Explicada</summary>
+            <p>Si la Rx es normal, el NT-proBNP es dudoso (ej. 300-900 pg/mL) y no hay criterios de internación, <b>NO DAR EL ALTA SIN SEGUIMIENTO.</b></p>
+            <ul>
+                <li><b>Conducta:</b> Alta transitoria con derivación rápida a Consultorio para: Ecocardiograma (búsqueda de HFpEF), Espirometría o Ergoespirometría.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-epoc-asma">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Exacerbación de EPOC y Crisis Asmática</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>OBJETIVOS DE OXIGENACIÓN (CRÍTICO)</b><br>
+            - <b>EPOC:</b> Meta SatO2 <b>88% - 92%</b>. La hiperoxigenación suprime el estímulo hipóxico y precipita narcosis por CO2. Titular con Venturi.<br>
+            - <b>Asma:</b> Meta SatO2 <b>93% - 95%</b> (Adultos no embarazadas).
+        </div>
+        <h3 style="color:var(--primary); border-bottom:1px solid #ccc; padding-bottom:5px;">PARTE A: EXACERBACIÓN DE EPOC (GOLD 2024)</h3>
+        <details open>
+            <summary>1. Estratificación Objetiva en Urgencias</summary>
+            <ul>
+                <li><b>Leve:</b> Disnea EVA < 5, FR < 24, FC < 95, SatO2 ≥ 92% aire ambiente, PCR < 10.</li>
+                <li><b>Moderada (≥ 3 de los sgtes):</b> Disnea EVA ≥ 5, FR ≥ 24, FC ≥ 95, SatO2 < 92% (requiere O2), PCR ≥ 10. Gases: PaCO2 normal o elevada sin acidosis severa.</li>
+                <li><b>Severa:</b> Falla respiratoria aguda. Acidosis (pH < 7.35 y PaCO2 > 45) o alteración del sensorio.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>2. Algoritmo de Tratamiento (EPOC)</summary>
+            <ul>
+                <li><b>Broncodilatadores:</b> Salbutamol + Ipratropio (MDI con aerocámara 4-8 puffs c/ 1-2 hs). Nebulizar solo si hay alteración del sensorio o fatiga.</li>
+                <li><b>Corticoides:</b> Prednisona 40 mg/día VO por 5 días. <i>No hay beneficio en dar más dosis o más días. IV solo si hay intolerancia digestiva.</i></li>
+                <li><b>Antibióticos (Criterios de Anthonisen):</b> Solo si aumenta purulencia + (volumen o disnea), o requiere VNI/VMI, o PCR > 50. Amoxi-Clavulánico 1g c/12h o Azitromicina. (Levofloxacina si riesgo Pseudomonas).</li>
+                <li><b>VNI (BiPAP):</b> Estándar de cuidado en acidosis (pH < 7.35) o disnea con uso de accesorios/paradojal. Iniciar precozmente.</li>
+            </ul>
+        </details>
+
+        <h3 style="color:var(--primary); border-bottom:1px solid #ccc; padding-bottom:5px; margin-top:30px;">PARTE B: CRISIS ASMÁTICA (GINA 2024)</h3>
+        <details open>
+            <summary>1. Evaluación de Gravedad Inmediata</summary>
+            <ul>
+                <li><b>Leve/Mod:</b> Habla en frases, no usa accesorios, FC < 120.</li>
+                <li><b>Severa:</b> Habla con palabras sueltas, trípode, usa accesorios, FC > 120, FR > 30. PEF ≤ 50%.</li>
+                <li><b>Paro Inminente:</b> Tórax silente, bradicardia, somnolencia.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>2. Algoritmo de Tratamiento en Guardia</summary>
+            <ul>
+                <li><b>Broncodilatadores:</b> Salbutamol 4 a 10 puffs con aerocámara c/ 20 min en la primera hora. <i>Sumar Ipratropio ÚNICAMENTE en crisis severas.</i></li>
+                <li><b>Corticoides (Inmediatos):</b> Prednisona 40-50 mg/día VO por 5-7 días. <i>Aceleran resolución y previenen recaídas. Pulso IV solo si no puede tragar.</i></li>
+                <li><b>Sulfato de Magnesio (Rescate):</b> En crisis severas sin respuesta tras 1h, o ingreso con hipoxemia severa (PEF < 30%). 2 gramos IV en 20 min.</li>
+            </ul>
+        </details>
+        <div class="alert alert-warning" style="display:block; margin-top:15px;">
+            <b>⚠️ Contraindicaciones formales en crisis asmática:</b><br>
+            - Antibióticos de rutina (suelen ser virales/alérgicas).<br>
+            - Sedantes (riesgo de depresión respiratoria mortal).
+        </div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-ira">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Injuria Renal Aguda (IRA)</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            ⚠️ <b>Los diuréticos NO previenen la IRA ni "lavan" el riñón.</b><br>
+            Está formalmente CONTRAINDICADO forzar diuresis con Furosemida en el paciente oligúrico hipo/euvolémico (empeora la isquemia medular). Solo usar para sobrecarga de volumen (EAP, anasarca).
+        </div>
+        <h3>1. Estadificación KDIGO</h3>
+        <div class="input-group"><label>Creatinina Basal (mg/dL):</label><input type="number" id="kdigo-cr-basal"></div>
+        <div class="input-group"><label>Creatinina Actual (mg/dL):</label><input type="number" id="kdigo-cr-actual"></div>
+        <div class="input-group"><label>Ritmo Diurético:</label>
+            <select id="kdigo-diuresis">
+                <option value="0">Normal (> 0.5 mL/kg/h)</option>
+                <option value="1">< 0.5 mL/kg/h por 6 a 12 horas</option>
+                <option value="2">< 0.5 mL/kg/h por ≥ 12 horas</option>
+                <option value="3">< 0.3 mL/kg/h por ≥ 24 horas (o Anuria ≥ 12h)</option>
+            </select>
+        </div>
+        <button class="btn btn-outline" onclick="calcularKDIGO()">Calcular Estadio KDIGO</button>
+        <div id="kdigo-result" class="alert"></div>
+
+        <details style="margin-top: 25px;" open>
+            <summary>2. Abordaje Inicial</summary>
+            <ul>
+                <li><b>Paso 1: Ecografía Renal/Vesical.</b> Obligatoria en primeras 24hs para descartar causa post-renal. <i>Colocar sonda Foley urgente si hay globo vesical.</i></li>
+                <li><b>Paso 2: Evaluación de Volumen.</b><br>- Pre-renal: FeNa < 1%, Urea/Cr > 20.<br>- NTA (Intrínseca): FeNa > 2%.</li>
+                <li><b>Paso 3: Revisión Farmacológica.</b> Suspender AINEs, IECA, ARA-II, aminoglucósidos, contrastes.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>3. Criterios de Diálisis de Urgencia (AEIOU)</summary>
+            <ul>
+                <li><b>A</b>cidosis metabólica severa refractaria (pH < 7.1).</li>
+                <li><b>E</b>lectrolitos: Hiperkalemia severa (> 6.5) refractaria o con cambios ECG.</li>
+                <li><b>I</b>ntoxicaciones (Litio, Etilenglicol, Metanol, Salicilatos).</li>
+                <li><b>O</b>verload (Sobrecarga de volumen): EAP refractario.</li>
+                <li><b>U</b>remia: Encefalopatía, pericarditis o sangrado urémico.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-diabetes">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Manejo de Hiperglucemia y Diabetes Intrahospitalaria</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>REGLA DE ORO:</b> Se suspenden los antidiabéticos orales al ingreso (Metformina por ácidosis láctica, iSGLT2 por cetoacidosis euglucémica).<br>
+            Queda formalmente desaconsejado el uso de "correcciones a demanda" como única estrategia.
+        </div>
+        <details open>
+            <summary>1. Objetivos Glucémicos</summary>
+            <ul>
+                <li><b>Meta general:</b> 140 a 180 mg/dL (críticos y no críticos).</li>
+                <li><b>Meta estricta (110 - 140):</b> Pacientes seleccionados (post-CCV) sin riesgo de hipoglucemia.</li>
+                <li><b>Meta laxa (hasta 200):</b> Terminales, comorbilidad severa.</li>
+            </ul>
+        </details>
+        <h3 style="margin-top: 25px;">2. Calculadora de Esquema Basal-Bolo</h3>
+        <p class="note">Para pacientes vírgenes de insulina o recalculo completo desde cero.</p>
+        <div class="input-group"><label>Peso del Paciente (kg):</label><input type="number" id="insu-peso"></div>
+        <div class="input-group"><label>Perfil del Paciente:</label>
+            <select id="insu-perfil">
+                <option value="0.25">Anciano, falla renal (ClCr < 30) o desnutrido (0.2 - 0.3 UI/kg)</option>
+                <option value="0.4" selected>Peso normal y función renal conservada (0.4 UI/kg)</option>
+                <option value="0.55">Obeso, infección severa o corticoides (0.5 - 0.6 UI/kg)</option>
+            </select>
+        </div>
+        <button class="btn btn-outline" onclick="calcularInsulina()">Calcular DTD y Esquema</button>
+        <div id="insu-result" class="alert"></div>
+
+        <details style="margin-top: 15px;">
+            <summary>Pacientes que YA usaban Insulina en Domicilio</summary>
+            <p><b>NO mantener el 100% al ingreso.</b></p>
+            <ul>
+                <li><b>Conducta estándar:</b> Reducir la dosis basal domiciliaria un 20% a 25%.</li>
+                <li><b>Si ingresa por Hipoglucemia o Falla Renal Aguda:</b> Reducir un 50%.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-cad-ehh">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Crisis Hiperglucémicas (CAD y EHH)</h2>
+        <details>
+            <summary>1. Diagnóstico Diferencial</summary>
+            <ul>
+                <li><b>CAD:</b> Glucemia > 250, pH < 7.30, HCO3 < 18, Cetonas positivas, Anión Gap elevado. Frecuente en DM1 o DM2 bajo estrés.</li>
+                <li><b>EHH:</b> Glucemia > 600, pH > 7.30, HCO3 > 18, Osm Efectiva > 320, Alteración sensorio. Cetonas negativas/trazas. DM2 ancianos, altísima mortalidad.</li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            ⚠️ <b>La insulina NO es el primer paso.</b><br>
+            Administrar insulina en hipopotasemia causa fibrilación ventricular. NUNCA iniciar insulina sin conocer el potasio.
+        </div>
+        <h3>Calculadora de Sodio Corregido</h3>
+        <p class="note">Para definir el fluido de hidratación posterior a la 1° hora.</p>
+        <div class="input-group"><label>Sodio Medido (mEq/L):</label><input type="number" id="cad-na"></div>
+        <div class="input-group"><label>Glucemia Actual (mg/dL):</label><input type="number" id="cad-glu"></div>
+        <button class="btn btn-outline" onclick="calcularNaCorregido()">Calcular Na Corregido</button>
+        <div id="cad-na-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">2. Los 4 Pilares del Tratamiento</h3>
+        <details open>
+            <summary>Pilar 1 y 2: Fluidos y Potasio</summary>
+            <ul>
+                <li><b>Fluidos (1° hora):</b> SF 0.9% a 1000-1500 ml/h. Luego, ajustar según Na corregido (si está normal/alto, cambiar a SF 0.45%).</li>
+                <li><b>Potasio:</b><br>- Si K < 3.3: NO dar insulina. Reponer 20-30 mEq/h hasta K > 3.3.<br>- Si K 3.3 - 5.2: Iniciar insulina + agregar 20-30 mEq de K al sachet.<br>- Si K > 5.2: Iniciar insulina sin potasio.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Pilar 3 y 4: Insulina IV y Transición a Dextrosa</summary>
+            <ul>
+                <li><b>Insulina IV:</b> Bolo 0.1 UI/kg, luego infusión a 0.1 UI/kg/h. Meta: Bajar 50-70 mg/dL/hora.</li>
+                <li><b>Transición Dextrosa:</b> Cuando glucemia llega a 200 (CAD) o 300 (EHH), <b>NO APAGAR LA BOMBA</b>. Reducir goteo a la mitad y agregar Dextrosa 5% al plan para mantener entre 150-200.</li>
+            </ul>
+        </details>
+        <p class="note"><b>Bicarbonato:</b> Desaconsejado salvo pH < 6.90. <br><b>Transición a SC:</b> Cuando CAD resuelta, iniciar SC y esperar 1-2 horas antes de apagar bomba IV.</p>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hiponatremia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Hiponatremia (< 135 mEq/L)</h2>
+        <details>
+            <summary>1. Confirmar y Estratificar Severidad</summary>
+            <ul>
+                <li><b>Bioquímica:</b> Leve (130-134), Moderada (125-129), Severa (<125).</li>
+                <li><b>Clínica (Urgencia):</b> Cefalea, náuseas, confusión, convulsiones o coma.</li>
+                <li><b>Descartar Pseudohiponatremia:</b> Sumar 1.6 mEq/L de Na por cada 100 mg/dL de glucosa > 100 mg/dL.</li>
+            </ul>
+        </details>
+        <details>
+            <summary>2. Interpretación del Sodio Urinario (Na u)</summary>
+            <ul>
+                <li><b>Hipovolémico:</b><br>- Na u < 20: Pérdida extrarrenal.<br>- Na u > 20: Pérdida renal (diuréticos).</li>
+                <li><b>Euvolémico:</b><br>- Na u > 40 (OsmU > 100): Alta sospecha de SIADH.<br>- Na u < 20 (OsmU < 100): Polidipsia primaria.</li>
+                <li><b>Hipervolémico:</b><br>- Na u < 20: ICC, Cirrosis, Nefrótico.<br>- Na u > 20: Insuficiencia renal.</li>
+            </ul>
+        </details>
+        <h3>Tratamiento Agudo (Sintomática Severa)</h3>
+        <ul>
+            <li><b>SSH 3%:</b> Bolo de 100 - 150 ml en 10-20 min.</li>
+            <li><span class="note">Preparación: 85 ml de SF (0.9%) + 15 ml de NaCl al 20% (1.5 ampollas).</span></li>
+        </ul>
+        <h3>Reposición Lenta (Asintomáticos/Leves)</h3>
+        <div class="alert alert-danger" style="display:block; padding:10px; margin-bottom:15px;">
+            <b>Regla de Oro:</b> El techo de reposición es de <b>8 mEq en 24 horas</b> para evitar el Síndrome de Desmielinización Osmótica.
+        </div>
+        <p class="note">Fórmula: mEq a reponer = ACT × 8</p>
+        <div class="input-group"><label>Peso (kg):</label><input type="number" id="peso-hipo"></div>
+        <div class="input-group"><label>Sexo/Edad (Factor ACT):</label>
+            <select id="factor-hipo">
+                <option value="0.6">Hombre Joven (0.6)</option>
+                <option value="0.5">Hombre Mayor / Mujer Joven (0.5)</option>
+                <option value="0.45">Mujer Mayor (0.45)</option>
+            </select>
+        </div>
+        <button class="btn btn-outline" onclick="calcularSodio()">Calcular Reposición (24hs)</button>
+        <div id="hipo-result" class="alert alert-info"></div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hipernatremia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Hipernatremia (> 145 mEq/L)</h2>
+        <details>
+            <summary>1. Enfoque Diagnóstico</summary>
+            <ul>
+                <li><b>Aguda (<48h):</b> Alto riesgo de hemorragia subaracnoidea.</li>
+                <li><b>Crónica (>48h):</b> Adaptación cerebral, alto riesgo de edema cerebral si se corrige rápido.</li>
+            </ul>
+        </details>
+        <details>
+            <summary>2. Interpretación de la Osmolaridad Urinaria</summary>
+            <ul>
+                <li><b>Osm u > 600 mOsm/kg:</b> Respuesta renal intacta.</li>
+                <li><b>Osm u 300-600 mOsm/kg:</b> Diuresis osmótica.</li>
+                <li><b>Osm u < 300 mOsm/kg:</b> El riñón no concentra. Diagnóstico: <b>Diabetes Insípida</b>.</li>
+            </ul>
+        </details>
+        <div class="alert alert-info" style="display:block; margin-bottom:15px;">
+            <b>Preparación de Solución al Medio (SF 0.45%):</b><br>
+            Mezclar a partes iguales Solución Fisiológica 0.9% y Agua Destilada.
+        </div>
+        <h3>Regla de Oro (Prevención Edema Cerebral)</h3>
+        <div class="alert alert-warning" style="display:block;">
+            Disminuir a ritmo máximo de <b>0.5 mEq/L por hora</b>, sin exceder <b>10 a 12 mEq/L en 24 horas</b>.
+        </div>
+        <h3>Calculadora de Déficit de Agua</h3>
+        <div class="input-group"><label>Sodio actual (mEq/L):</label><input type="number" id="na-hiper"></div>
+        <div class="input-group"><label>Peso (kg):</label><input type="number" id="peso-hiper"></div>
+        <div class="input-group"><label>Factor (ACT):</label>
+            <select id="factor-hiper">
+                <option value="0.6">Hombre Joven (0.6)</option>
+                <option value="0.5">Hombre Anciano / Mujer Joven (0.5)</option>
+                <option value="0.45">Mujer Anciana (0.45)</option>
+            </select>
+        </div>
+        <button class="btn btn-outline" onclick="calcularHipernatremia()">Calcular Plan 24hs</button>
+        <div id="hiper-result" class="alert"></div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hiperkalemia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Hiperkalemia (> 5.5 mEq/L)</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Paso 1: ECG INMEDIATO.</b> Buscar T picudas, pérdida de onda P o QRS ancho. Si hay cambios o K > 6.5, es <b>URGENCIA</b>.
+        </div>
+        <details>
+            <summary>2. Diagnóstico Diferencial (Causas)</summary>
+            <ul>
+                <li><b>Pseudohiperkalemia:</b> Hemólisis, leucocitosis >100.000, trombocitosis.</li>
+                <li><b>Redistribución:</b> Acidosis, déficit de insulina, lisis tumoral, rabdomiólisis.</li>
+                <li><b>Falla excreción:</b> IRA/IRC, IECA, ARA-II, Espironolactona, AINEs.</li>
+            </ul>
+        </details>
+        <h3>Pilares del Tratamiento</h3>
+        <ul>
+            <li><b>1. Estabilización:</b> Gluconato de Calcio 10% (1 amp IV en 2-3 min). <i>NO baja el potasio.</i></li>
+            <li><b>2. Redistribución:</b> Solución Polarizante (10 UI Insulina Regular + 50g Dextrosa IV en 15-30 min) y Salbutamol nebulizado.</li>
+            <li><b>3. Eliminación:</b> Furosemida 40-80 mg IV, Resinas o Hemodiálisis.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hipokalemia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Hipokalemia (< 3.5 mEq/L)</h2>
+        <details>
+            <summary>1. Enfoque Diagnóstico</summary>
+            <ul>
+                <li><b>Pérdidas Extrarrenales (K u < 20 mEq/día):</b> Diarrea, fístulas, laxantes.</li>
+                <li><b>Pérdidas Renales (K u > 20 mEq/día):</b> Diuréticos, Hiperaldosteronismo, Vómitos (alcalosis), Tubulopatías.</li>
+            </ul>
+        </details>
+        <div class="alert alert-warning" style="display:block; margin-bottom:15px;">
+            <b>REGLA DE ORO:</b> Siempre pedir y corregir Magnesio. La hipomagnesemia inhibe la reabsorción renal; el K no corregirá por más que se administre.
+        </div>
+        <h3>Seguridad EV y Reposición</h3>
+        <p class="note">Déficit: Cada 0.3 mEq/L de caída = déficit de ~100 mEq.</p>
+        <ul>
+            <li><b>DILUYENTE:</b> SF 0.9%. NUNCA usar Dextrosa (estimula insulina y mete el K a la célula).</li>
+            <li><b>Vía Periférica:</b> Máximo 40 mEq por litro.</li>
+            <li><b>Velocidad:</b> Máximo 10-20 mEq/hora.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="container hidden" id="view-calcio">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Trastornos del Calcio</h2>
+        <h3>Hipocalcemia (< 8.5 mg/dL)</h3>
+        <div class="alert alert-info" style="display:block; margin-bottom:15px;">
+            <b>Corrección:</b> Ca Corregido = Ca medido + [0.8 x (4.0 - Albúmina del paciente)]
+        </div>
+        <details>
+            <summary>1. Signos Clínicos y ECG</summary>
+            <ul>
+                <li><b>Chvostek:</b> Contracción facial al percutir nervio facial.</li>
+                <li><b>Trousseau:</b> Espasmo carpopedal al inflar manguito.</li>
+                <li><b>ECG:</b> QT prolongado.</li>
+            </ul>
+        </details>
+        <details>
+            <summary>2. Tratamiento Endovenoso (Agudo)</summary>
+            <ul>
+                <li><b>Bolo de Ataque:</b> Gluconato de Calcio 10%: 1-2 ampollas en 50-100 ml de Dx5% a pasar en 10-20 min.</li>
+                <li><b>Mantenimiento EV:</b> 10 ampollas de Gluconato de Calcio 10% en 1000 ml de Dx5% o SF 0.9%. Ritmo inicial a 50 ml/h.</li>
+            </ul>
+        </details>
+        <h3 style="margin-top: 25px;">Hipercalcemia (> 10.5 mg/dL)</h3>
+        <ul>
+            <li><b>Severidad:</b> Leve (10.5-12), Mod (12-14), Grave (>14 - Urgencia).</li>
+            <li><b>1. Hidratación:</b> Pila central. SF 0.9% a 200-500 ml/h. Objetivo: diuresis > 100 ml/h.</li>
+            <li><b>2. Diuréticos:</b> Furosemida SOLO con paciente euvolémico/hipervolémico.</li>
+            <li><b>3. Específico:</b> Bisfosfonatos (tumorales).</li>
+        </ul>
+    </div>
+</div>
+
+<div class="container hidden" id="view-sae">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Síndrome Ascítico Edematoso (SAE)</h2>
+        <details>
+            <summary>1. Paracentesis y GASA (Diagnóstico)</summary>
+            <p>La paracentesis es <b>OBLIGATORIA</b> en ascitis de inicio reciente, internación o deterioro clínico (descartar PBE).</p>
+            <ul>
+                <li><b>GASA > 1.1 g/dL (Hipertensión Portal):</b><br>- Proteínas LA < 2.5: Cirrosis.<br>- Proteínas LA > 2.5: Insuficiencia Cardíaca Derecha, Budd-Chiari.</li>
+                <li><b>GASA < 1.1 g/dL (Sin HTP):</b> Carcinomatosis, TBC, ascitis pancreática.</li>
+                <li><b>Criterio PBE:</b> Polimorfonucleares > 250/mm³. Hemocultivos LA al lado de la cama.</li>
+            </ul>
+        </details>
+        <details>
+            <summary>2. Tratamiento Diurético (Grado 2)</summary>
+            <ul>
+                <li><b>Sodio:</b> Restringir a 2 g/día (88 mEq). No restringir líquidos salvo Na < 125.</li>
+                <li><b>Esquema Inicial:</b> Espironolactona 100 mg / Furosemida 40 mg (dosis matinal).</li>
+                <li><b>Titulación:</b> Aumentar manteniendo proporción (200/80, 300/120) hasta máx 400/160.</li>
+                <li><b>Objetivo:</b> Descenso 0.5 kg/día (sin edemas) o 1 kg/día (con edemas).</li>
+            </ul>
+        </details>
+        <h3>Paracentesis Evacuadora (A tensión / Refractaria)</h3>
+        <div class="alert alert-danger" style="display:block; margin-bottom: 15px;">
+            <b>Prevención de DCIP:</b><br>
+            - Si extrae <b>< 5 Litros</b>: SF o expansores sintéticos.<br>
+            - Si extrae <b>> 5 Litros</b>: OBLIGATORIO reponer con Albúmina humana.
+        </div>
+        <div class="input-group">
+            <label>Volumen de Ascitis Extraído (Litros):</label>
+            <input type="number" id="litros-ascitis" placeholder="Ej: 6">
+        </div>
+        <button class="btn btn-outline" onclick="calcularAlbumina()">Calcular Reposición</button>
+        <div id="albumina-result" class="alert"></div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hepatograma">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Alteración del Hepatograma</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Paso 1: Descartar Fallo Hepático Agudo (FHA)</b><br>
+            Encefalopatía + Coagulopatía (RIN > 1.5) en paciente sin cirrosis. Marcadores de función en agudo: RIN, Bilirrubina, Albúmina.
+        </div>
+        <h3>1. Calculadora del Factor R (Patrón Lesional)</h3>
+        <p class="note">Fórmula: (ALT pac / LSN ALT) / (FAL pac / LSN FAL)</p>
+        <div class="input-group"><label>ALT (GPT) del paciente:</label><input type="number" id="alt-pac"></div>
+        <div class="input-group"><label>Límite Sup. Normal ALT (Lab):</label><input type="number" id="alt-lsn"></div>
+        <div class="input-group"><label>FAL del paciente:</label><input type="number" id="fal-pac"></div>
+        <div class="input-group"><label>Límite Sup. Normal FAL (Lab):</label><input type="number" id="fal-lsn"></div>
+        <button class="btn btn-outline" onclick="calcularFactorR()">Calcular Factor R</button>
+        <div id="factor-r-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">2. Hepatitis Alcohólica: Índice de Maddrey</h3>
+        <div class="input-group"><label>Tiempo de Protrombina (Paciente) - seg:</label><input type="number" id="tp-pac"></div>
+        <div class="input-group"><label>Tiempo de Protrombina (Control) - seg:</label><input type="number" id="tp-con"></div>
+        <div class="input-group"><label>Bilirrubina Total (mg/dL):</label><input type="number" id="bili-pac"></div>
+        <button class="btn btn-outline" onclick="calcularMaddrey()">Calcular Maddrey</button>
+        <div id="maddrey-result" class="alert"></div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-pancreatitis">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Pancreatitis Aguda</h2>
+        <details>
+            <summary>1. Criterios Diagnósticos (Atlanta) y Etiología</summary>
+            <p>Se requieren <b>2 de 3</b> para confirmar diagnóstico:</p>
+            <ul>
+                <li>Clínica: Dolor epigástrico, transfixiante a dorso.</li>
+                <li>Laboratorio: Lipasa o Amilasa > 3 veces el LSN. (Lipasa más S/E).</li>
+                <li>Imágenes: Hallazgos compatibles.</li>
+            </ul>
+            <p><b>Ecografía Abdominal: OBLIGATORIA al ingreso</b> para descartar etiología biliar (40-50%). TC de abdomen <b>NO</b> indicada al ingreso salvo duda diagnóstica o deterioro a las 72 hs.</p>
+        </details>
+
+        <h3>2. Score de Gravedad (BISAP)</h3>
+        <div class="checkbox-group"><input type="checkbox" id="bisap-b"> <label><b>B</b>UN > 25 mg/dL</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="bisap-i"> <label><b>I</b>mpaired mental status (Alteración del sensorio)</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="bisap-s"> <label><b>S</b>IRS (Criterios inflamatorios)</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="bisap-a"> <label><b>A</b>ge > 60 años</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="bisap-p"> <label><b>P</b>leural effusion (Derrame pleural)</label></div>
+        <button class="btn btn-outline" onclick="calcularBISAP()">Calcular BISAP</button>
+        <div id="bisap-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">3. Fluidoterapia (Ringer Lactato)</h3>
+        <p class="note">Hidratación moderada. Objetivo (primeras 12-24h): Diuresis > 0.5 ml/kg/h, y descenso de Hematocrito/BUN.</p>
+        <div class="input-group"><label>Peso del Paciente (kg):</label><input type="number" id="peso-panc"></div>
+        <button class="btn btn-outline" onclick="calcularFluidosPanc()">Calcular Ritmo de Infusión</button>
+        <div id="fluidos-panc-result" class="alert alert-info"></div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hda">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Hemorragia Digestiva Alta (HDA)</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Prioridad 1: ABCDE y Estabilización Hemodinámica.</b><br>
+            No realizar VEDA sin paciente estable (o intubado si hay riesgo de aspiración).
+        </div>
+        <details>
+            <summary>1. Conceptos y Perlas Clínicas</summary>
+            <ul>
+                <li><b>Hematocrito inicial:</b> NO refleja la pérdida aguda. Tarda 24-48 hs en hemodiluirse.</li>
+                <li><b>Hematoquecia:</b> Sangre roja por recto puede ser una HDA masiva con tránsito acelerado.</li>
+            </ul>
+        </details>
+        <h3>2. Calculadora Índice Urea/Creatinina</h3>
+        <p class="note">Identifica rápida absorción de proteínas de sangre digerida. Orientador de HDA.</p>
+        <div class="input-group"><label>Urea sérica (mg/dL):</label><input type="number" id="urea-hda"></div>
+        <div class="input-group"><label>Creatinina sérica (mg/dL):</label><input type="number" id="cr-hda"></div>
+        <button class="btn btn-outline" onclick="calcularUreaCr()">Evaluar Origen</button>
+        <div id="urea-cr-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">3. Calculadora Score Glasgow-Blatchford</h3>
+        <div class="input-group"><label>Urea sérica (mg/dL):</label><input type="number" id="gbs-urea" placeholder="Ej: 45"></div>
+        <div class="input-group"><label>Hemoglobina (g/dL):</label><input type="number" id="gbs-hb" placeholder="Ej: 11.5"></div>
+        <div class="input-group"><label>Sexo:</label><select id="gbs-sexo"><option value="m">Masculino</option><option value="f">Femenino</option></select></div>
+        <div class="input-group"><label>Presión Arterial Sistólica (mmHg):</label><input type="number" id="gbs-tas" placeholder="Ej: 110"></div>
+        <div class="input-group"><label>Frecuencia Cardíaca (lpm):</label><input type="number" id="gbs-fc" placeholder="Ej: 105"></div>
+        <label>Manifestaciones y Comorbilidades:</label>
+        <div class="checkbox-group"><input type="checkbox" id="gbs-melena"> <label>Melena en la presentación</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="gbs-sincope"> <label>Síncope</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="gbs-hepato"> <label>Enfermedad Hepática</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="gbs-icc"> <label>Insuficiencia Cardíaca</label></div>
+        <button class="btn btn-outline" onclick="calcularGBS()" style="margin-top: 10px;">Calcular Score GBS</button>
+        <div id="gbs-result" class="alert"></div>
+
+        <details style="margin-top: 25px;" open>
+            <summary>4. Transfusión y Manejo Endoscópico</summary>
+            <ul>
+                <li><b>Estrategia Restrictiva:</b> Transfundir solo si Hb < 7 g/dL (Objetivo 7-9 g/dL). En isquemia miocárdica: < 8-9 g/dL.</li>
+                <li><b>¡Atención!:</b> Sobretransfundir (Hb > 9) en cirróticos aumenta la presión portal y resangrado.</li>
+                <li><b>Momento VEDA:</b> Ideal < 24 hs. Urgencia (< 12 hs si inestable). Considerar procinéticos previos (Eritromicina/Metoclopramida) para limpiar el estómago.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>5. Manejo Farmacológico Empírico</summary>
+            <ul>
+                <li><b>Sospecha NO Variceal (Úlcera):</b> IBP (Pantoprazol/Omeprazol). Bolo de 80 mg IV, luego infusión continua 8 mg/h por 72 hs.</li>
+                <li><b>Sospecha Variceal (Cirrótico):</b><br>
+                    1. <b>Vasoactivos:</b> Terlipresina 2 mg IV c/4hs u Octreotide (50mcg bolo + 50mcg/h infusión).<br>
+                    2. <b>ATB Profiláctico:</b> Ceftriaxona 1g/día IV (Obligatorio).<br>
+                    3. IBP empírico asociado.
+                </li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-hdb">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Hemorragia Digestiva Baja (HDB)</h2>
+        <div class="alert alert-warning" style="display:block; margin-bottom:15px;">
+            <b>Paso 1: DESCARTAR HDA MASIVA.</b><br>
+            El 10-15% de las hematoquecias con inestabilidad son HDA. Considerar SNG (si retorna bilis limpia, aleja HDA) o VEDA rápida.
+        </div>
+        <details>
+            <summary>Etiologías</summary>
+            <ul>
+                <li><b>Causas:</b> Diverticulosis (sangrado arterial indoloro), angiodisplasias, colitis isquémica, cáncer, patología orificial.</li>
+            </ul>
+        </details>
+        <h3>Calculadora Score de Oakland</h3>
+        <p class="note">Estratificación de riesgo para HDB. Si es ≤ 8 puntos implica sangrado menor con alta probabilidad de egreso seguro. > 8 requiere internación.</p>
+        <div class="input-group"><label>Edad (años):</label>
+            <select id="oak-edad"><option value="0">< 40</option><option value="1">40 - 69</option><option value="2">≥ 70</option></select>
+        </div>
+        <div class="input-group"><label>Sexo:</label>
+            <select id="oak-sexo"><option value="0">Femenino</option><option value="1">Masculino</option></select>
+        </div>
+        <div class="input-group"><label>Admisión previa por HDB:</label>
+            <select id="oak-hdbprevia"><option value="0">No</option><option value="1">Sí</option></select>
+        </div>
+        <div class="input-group"><label>Sangre en el Tacto Rectal:</label>
+            <select id="oak-tacto"><option value="0">Ausente</option><option value="1">Presente</option></select>
+        </div>
+        <div class="input-group"><label>Frecuencia Cardíaca (lpm):</label>
+            <select id="oak-fc"><option value="0">< 70</option><option value="1">70 - 89</option><option value="2">90 - 109</option><option value="3">≥ 110</option></select>
+        </div>
+        <div class="input-group"><label>Presión Arterial Sistólica (mmHg):</label>
+            <select id="oak-tas"><option value="5">< 90</option><option value="4">90 - 119</option><option value="3">120 - 129</option><option value="2">130 - 159</option><option value="0">≥ 160</option></select>
+        </div>
+        <div class="input-group"><label>Hemoglobina (g/dL):</label>
+            <select id="oak-hb"><option value="22">< 7.0</option><option value="17">7.0 - 8.9</option><option value="13">9.0 - 10.9</option><option value="8">11.0 - 12.9</option><option value="4">13.0 - 15.9</option><option value="0">≥ 16.0</option></select>
+        </div>
+        <button class="btn btn-outline" onclick="calcularOakland()">Calcular Oakland</button>
+        <div id="oakland-result" class="alert"></div>
+
+        <h3 style="margin-top:25px;">Abordaje según Estabilidad Hemodinámica</h3>
+        <div style="border-left: 4px solid var(--danger); padding-left: 10px; margin-bottom: 15px;">
+            <h4 style="margin:0 0 5px 0; color:var(--danger);">Paciente INESTABLE (Sangrado Masivo)</h4>
+            <p style="margin:0; font-size: 0.9rem;">
+                <b>Estudio de elección: Angio-TC de Abdomen y Pelvis.</b><br>
+                Rápido, localiza el sitio exacto (detecta >0.3 ml/min).<br>
+                <i>Tratamiento:</i> Angiografía con embolización o Cirugía de salvataje (colectomía).
+            </p>
+        </div>
+        <div style="border-left: 4px solid var(--success); padding-left: 10px; margin-bottom: 15px;">
+            <h4 style="margin:0 0 5px 0; color:var(--success);">Paciente ESTABLE</h4>
+            <p style="margin:0; font-size: 0.9rem;">
+                <b>Estudio de elección: Videocolonoscopía (VCC).</b><br>
+                Momento: 24-48 horas, <b>PREVIA preparación colónica (PEG)</b>. Hacer una VCC sin preparación en agudo es inútil por coágulos y materia fecal.
+            </p>
+        </div>
+        <details>
+            <summary>Manejo Médico General</summary>
+            <ul>
+                <li>Mismos umbrales de transfusión que en HDA (Hb < 7 g/dL).</li>
+                <li>Corregir coagulopatías (antídotos, complejo protrombínico) si el riesgo de sangrado supera el trombótico.</li>
+                <li><b>Alerta:</b> La taquicardia precede a la caída de la presión arterial en el resangrado.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-nac">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Neumonía Adquirida en la Comunidad (NAC)</h2>
+        <details>
+            <summary>1. Diagnóstico y Estudios Básicos</summary>
+            <ul>
+                <li><b>Clínica:</b> Fiebre, tos, disnea, dolor pleurítico, taquipnea, condensación. <i>Nota: En adultos mayores la presentación suele ser atípica (caídas, confusión, sin fiebre).</i></li>
+                <li><b>Imágenes:</b> Rx de tórax (Frente y Perfil) OBLIGATORIA. TC sin contraste solo en duda diagnóstica/complicaciones o inmunosuprimidos al ingreso.</li>
+                <li><b>Microbiología:</b><br>- Ambulatorios: No se recomiendan cultivos.<br>- Internados: Hemocultivos x2 + Cultivo de esputo (solo si >25 PMN y <10 cel. epiteliales). Hisopado viral si hay sospecha.</li>
+            </ul>
+        </details>
+        <h3>2. Calculadora Score CURB-65</h3>
+        <p class="note">Estratificación de riesgo para decidir manejo ambulatorio o internación. <i>Ojo: Si hay parámetros de gravedad como PAFI<300, FR>30 o infiltrados multilobares, evaluar internación igual.</i></p>
+        <div class="checkbox-group"><input type="checkbox" id="curb-c"> <label><b>C</b>onfusión</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="curb-u"> <label><b>U</b>rea > 42 mg/dL</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="curb-r"> <label><b>R</b>espiración ≥ 30/min</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="curb-b"> <label><b>B</b>lood Pressure (PAS < 90 o PAD ≤ 60 mmHg)</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="curb-65"> <label>Edad ≥ <b>65</b> años</label></div>
+        <button class="btn btn-outline" onclick="calcularCurb65()">Calcular CURB-65</button>
+        <div id="curb-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">3. Algoritmo de Tratamiento Empírico (SADI)</h3>
+        <div class="alert alert-warning" style="display:block; margin-bottom:15px;">
+            <b>Regla de Oro:</b> El antibiótico debe iniciarse en guardia, idealmente dentro de las primeras 4 horas desde el diagnóstico.
+        </div>
+        <details open>
+            <summary>Grupo 1: Ambulatorio, < 65 años, SIN comorbilidades</summary>
+            <ul>
+                <li><b>Elección:</b> Amoxicilina 1 g VO cada 8 o 12 hs.</li>
+                <li><b>Alergia Penicilina:</b> Claritromicina 500 mg VO cada 12 hs, Azitromicina 500 mg/día o Levofloxacina 750 mg/día.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Grupo 2: Ambulatorio, > 65 años o CON comorbilidades</summary>
+            <ul>
+                <li><b>Elección:</b> Amoxicilina-Clavulánico 1g VO cada 12 hs o Ampicilina-Sulbactam 1.5g VO cada 12 hs + Claritromicina 500 mg cada 12 hs.</li>
+                <li><b>Alergia Penicilina:</b> Claritromicina 500 mg VO cada 12 hs, Azitromicina 500 mg/día o Levofloxacina 750 mg/día.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Grupo 3: Internación Sala General (CURB-65 = 2)</summary>
+            <ul>
+                <li><b>Elección:</b> Ampicilina-Sulbactam 1.5 g IV cada 6 hs + Claritromicina 500 mg IV cada 12 hs.</li>
+                <li><b>Alternativa:</b> Ceftriaxona 1 g IV cada 24 hs + Claritromicina 500 mg IV cada 12 hs.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Grupo 4: Internación UTI (CURB-65 ≥ 3)</summary>
+            <ul>
+                <li><b>Elección:</b> Ceftriaxona 2 g IV cada 24 hs + Claritromicina IV o Levofloxacina 750 mg IV.</li>
+                <li><b>Sospecha Pseudomonas (Bronquiectasias, EPOC severo):</b> Piperacilina-Tazobactam 4.5 g IV cada 6 hs + Claritromicina.</li>
+            </ul>
+        </details>
+        <details>
+            <summary>Criterios de Internación y Seguimiento</summary>
+            <ul>
+                <li>CURB-65 ≥ 2, Hipoxemia (SatO2 < 92%), derrame pleural, inestabilidad o falla a tratamiento domiciliario.</li>
+                <li><b>Oseltamivir:</b> 75 mg c/12h en época de Influenza en pacientes de riesgo o internados con sospecha de gripe.</li>
+                <li><b>Switch a Vía Oral:</b> Cuando lleve 48hs afebril, mejoría clínica y tolere vía oral. Duración total: 5 a 7 días en no complicados.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-nih">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Neumonía Asociada a Cuidados de la Salud (NACS) e Intrahospitalaria (NIH)</h2>
+        <details>
+            <summary>1. Definición y Criterios Clínicos</summary>
+            <ul>
+                <li><b>NIH:</b> Aparece ≥ 48h del ingreso, o dentro de 90 días post-alta.</li>
+                <li><b>NACS:</b> Ingresa por guardia pero tiene estrecho contacto con sistema de salud (riesgo MDR).</li>
+                <li><b>Criterios (≥2):</b> Infiltrado radiológico nuevo, fiebre/hipotermia, leucocitosis/leucopenia, secreciones purulentas.</li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Evaluación Inicial CLAVE: Factores de riesgo MDR</b><br>
+            Uso ATB IV en últimos 90 días, internación > 2 días en últimos 90 días, geriátrico, hemodiálisis, curación de heridas crónicas, inmunosupresión/bronquiectasias, o NIH de inicio tardío (≥5 días de internación).
+        </div>
+        <details>
+            <summary>2. Estudios y Microbiología</summary>
+            <ul>
+                <li><b>Imágenes:</b> Rx de tórax F y P. TC sin contraste muy sensible en pacientes postrados.</li>
+                <li><b>Microbiología OBLIGATORIA:</b> Hemocultivos x2 + Muestra respiratoria (Esputo o aspirado traqueal/mini-BAL). <i>Tomar antes del ATB.</i></li>
+                <li><b>Procalcitonina (PCT):</b> Útil para suspender temprano, no para decidir inicio.</li>
+            </ul>
+        </details>
+        <h3>3. Algoritmo de Tratamiento Empírico</h3>
+        <details open>
+            <summary>A. SIN factores de riesgo MDR</summary>
+            <ul>
+                <li><b>Elección:</b> Ampicilina-Sulbactam 1.5 a 3 g IV cada 6 hs o Ceftriaxona 1 a 2 g IV cada 24 hs.</li>
+                <li><b>Alergia:</b> Levofloxacina 750 mg IV cada 24 hs.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>B. CON factores de riesgo MDR o Gravedad (Sepsis/Shock)</summary>
+            <p>Cobertura Antipseudomonal OBLIGATORIA:</p>
+            <ul>
+                <li><b>Elección:</b> Piperacilina-Tazobactam 4.5 g IV cada 6 hs.</li>
+                <li><b>Alternativas:</b> Cefepime 2 g IV c/8hs. Meropenem/Imipenem (reservar para antecedente BLEE o shock severo).</li>
+            </ul>
+            <p><b>Doble Cobertura Antipseudomonal (+ Amikacina/Colistin):</b> SOLO en Shock Séptico con sospecha de carbapenemasas hasta tener cultivos.</p>
+            <p><b>Cobertura SAMR (Vancomicina o Linezolid):</b> Si prevalencia >20%, colonización previa, shock séptico o neumonía necrotizante. <i>Vanco: carga 25-30 mg/kg, mant: 15 mg/kg c/12h (medir vancocinemia al día 3).</i></p>
+        </details>
+        <details>
+            <summary>4. Desescalamiento y Duración</summary>
+            <ul>
+                <li><b>Día 3:</b> Si cultivos negativos y evoluciona bien -> Suspender SAMR y doble cobertura antipseudomonal.</li>
+                <li><b>Duración:</b> Fuertemente recomendado <b>7 días</b> si hay buena evolución (incluso si es Pseudomonas). Excepciones: cavitaciones, empiema.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-itu">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Infección del Tracto Urinario (ITU)</h2>
+        <div class="alert alert-info" style="display:block; margin-bottom:15px;">
+            <b>Bacteriuria Asintomática:</b> Sedimento o urocultivo patológico SIN SÍNTOMAS sólo se trata en embarazadas y previo a cirugías urológicas.
+        </div>
+        <details>
+            <summary>1. Clasificación y Microbiología</summary>
+            <ul>
+                <li><b>Cistitis (Baja):</b> Disuria, urgencia, sin fiebre.</li>
+                <li><b>Pielonefritis (Alta):</b> Fiebre (>38°C), dolor lumbar (Giordano +).</li>
+                <li><b>Complicada:</b> Varones, embarazo, litiasis, sondaje, falla renal, inmunosupresión.</li>
+                <li><b>Urocultivo OBLIGATORIO:</b> En ITU Alta, Complicada, embarazadas, varones o fracaso de tratamiento. <i>(No estricto en Cistitis no complicada de mujer).</i></li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Banderas Rojas (SADI):</b> E. coli tiene resistencia a Ciprofloxacina > 20-30% y TMS > 30-40%. <b>NO usar Fluoroquinolonas empíricas de primera línea.</b>
+        </div>
+        <h3>2. Tratamiento Empírico</h3>
+        <details open>
+            <summary>A. Cistitis No Complicada (Mujer)</summary>
+            <ul>
+                <li>Nitrofurantoína 100 mg VO cada 6-8 hs por 5-7 días. <i>(Evitar si ClCr < 30).</i></li>
+                <li>Cefalexina 500 mg VO cada 8 hs por 5-7 días.</li>
+                <li>Fosfomicina-trometamol 3 g VO (dosis única).</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>B. Pielonefritis Ambulatoria</summary>
+            <ul>
+                <li><b>Carga Guardia:</b> Ceftriaxona 1 g IV/IM dosis única.</li>
+                <li><b>Alta (hasta cultivo):</b> Cefixima 400 mg/día, o Ciprofloxacina 500 mg c/12h, o Amoxi-Clavulánico 1g c/12h. Ajustar a las 72hs.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>C. Pielonefritis / ITU Complicada (Internación)</summary>
+            <ul>
+                <li><b>1° Línea:</b> Ceftriaxona 1 a 2 g IV cada 24 hs o AMS 1.5 g cada 6 hs.</li>
+                <li><b>Alergia:</b> Amikacina 15 mg/kg IV cada 24 hs.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>D. Sospecha de BLEE / Sepsis Urinaria</summary>
+            <ul>
+                <li><i>Riesgos BLEE:</i> ATB en últimos 3 meses, internación, sonda.</li>
+                <li><b>Elección:</b> Ertapenem 1 g IV c/24h, Imipenem/Meropenem (si inestable o Pseudomonas), o Piperacilina-Tazobactam 4.5g c/6h.</li>
+            </ul>
+        </details>
+        <p class="note">⚠️ Nitrofurantoína, Fosfomicina y TMS NO son aptas para pielonefritis (baja penetración en parénquima renal). Tratamiento Pielonefritis total = 7 días.</p>
+    </div>
+</div>
+
+<div class="container hidden" id="view-dengue">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Manejo del Dengue</h2>
+        <details>
+            <summary>1. Sospecha Clínica y Diagnóstico</summary>
+            <p>Fiebre < 7 días sin afección de vía aérea superior, proveniente de área con circulación en últimos 14 días + 2 o más: Náuseas/vómitos, Exantema, Mialgias/Artralgias, Cefalea/dolor retroocular, Petequias/lazo positivo, Leucopenia.</p>
+            <ul>
+                <li>Día 0 a 5: Ag NS1 y/o PCR en sangre.</li>
+                <li>Día 5 a 7: PCR y/o IgM.</li>
+                <li>Día > 7: IgM en suero.</li>
+                <li><i>La vacuna en los últimos 30 días puede alterar resultados.</i></li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>SIGNOS DE ALARMA (Exigen Internación y Reposición IV):</b><br>
+            - Dolor abdominal intenso y continuo.<br>
+            - Vómitos persistentes (≥ 3 en 1h o ≥ 4 en 6h).<br>
+            - Acumulación clínica de líquidos (ascitis, derrame).<br>
+            - Sangrado de mucosas.<br>
+            - Letargo o irritabilidad.<br>
+            - Hepatomegalia > 2 cm.<br>
+            - Laboratorio: Aumento progresivo del Hto con caída rápida de plaquetas.
+        </div>
+        <h3>2. Grupos de Manejo</h3>
+        <details open>
+            <summary>GRUPO A (Sin alarma, sin comorbilidad)</summary>
+            <ul>
+                <li>Ambulatorio. Líquidos abundantes (2-3 L/día).</li>
+                <li>Paracetamol máx 4 g/día.</li>
+                <li>🛑 <b>CONTRAINDICADO ABSOLUTO:</b> Aspirina, AINEs (Ibuprofeno, Diclofenac), Corticoides o inyecciones IM.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>GRUPO B1 (Sin alarma, CON comorbilidad/embarazo/riesgo social)</summary>
+            <ul>
+                <li>Observación. Estimular vía oral o SF 0.9% a 2-3 ml/kg/h.</li>
+                <li>Control de Hto y plaquetas diario.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>GRUPO B2 (CON Signos de Alarma)</summary>
+            <ul>
+                <li>Internación en Sala. Terapia de Fuga: <b>Ringer Lactato o SF 0.9% IV a 10 ml/kg/h</b> en la 1° hora.</li>
+                <li>Si mejora y baja Hto: Reducir a 5-7 ml/kg/h por 2-4h, luego 3-5 ml/kg/h.</li>
+                <li>Si no mejora: Repetir bolo 10 ml/kg/h (hasta 3 veces). Si no responde -> UTI.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>GRUPO C (Dengue Grave / Shock)</summary>
+            <ul>
+                <li>UTI/Shock Room. Cristaloides IV a 20 ml/kg en 15-30 min.</li>
+                <li>Si no sale, evaluar drogas vasoactivas o transfusión si hay hemorragia oculta.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-neutropenia">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Neutropenia Febril</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>REGLA DE ORO (Emergencia Médica):</b><br>
+            Fiebre + RAN < 500 cel/mm³ (o <1000 con caída inminente). El tratamiento ATB empírico DEBE iniciarse en los primeros <b>60 minutos</b> desde el triaje ("Hora de Oro").
+        </div>
+        <details>
+            <summary>1. Evaluación y Cultivos</summary>
+            <ul>
+                <li><b>Examen físico:</b> Buscar focos ocultos (mucosa oral, perianal, catéteres). <b>Contraindicado el tacto rectal.</b></li>
+                <li><b>Hemocultivos (OBLIGATORIOS):</b> 2 pares (aerobios/anaerobios). Si tiene Catéter Venoso Central: 1 par por catéter y 1 par periférico.</li>
+                <li><b>Imágenes:</b> Rx de tórax F/P. TC sin contraste a las 72hs si persiste febril sin foco.</li>
+            </ul>
+        </details>
+        <h3>2. Calculadora Score MASCC</h3>
+        <p class="note">Estratifica riesgo. Puntaje máximo 26.</p>
+        <div class="input-group"><label>1. Carga de la enfermedad (elegir una):</label>
+            <select id="mascc-carga">
+                <option value="5">Ausencia o síntomas leves (+5)</option>
+                <option value="3">Síntomas moderados (+3)</option>
+                <option value="0">Síntomas severos o moribundo (0)</option>
+            </select>
+        </div>
+        <div class="checkbox-group"><input type="checkbox" id="mascc-hemo"> <label>Sin hipotensión (PAS > 90 mmHg) <b>(+5)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="mascc-epoc"> <label>Sin antecedente de EPOC <b>(+4)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="mascc-tumor"> <label>Tumor sólido o neo hematológica SIN infección fúngica previa <b>(+4)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="mascc-hidra"> <label>Sin deshidratación que requiera fluidos IV <b>(+3)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="mascc-fuera"> <label>Ambulatorio al iniciar la fiebre (fuera del hospital) <b>(+3)</b></label></div>
+        <div class="checkbox-group"><input type="checkbox" id="mascc-edad"> <label>Edad < 60 años <b>(+2)</b></label></div>
+        <button class="btn btn-outline" onclick="calcularMascc()">Calcular MASCC</button>
+        <div id="mascc-result" class="alert"></div>
+
+        <h3 style="margin-top: 25px;">3. Tratamiento Empírico (SADI)</h3>
+        <details open>
+            <summary>A. ALTO RIESGO (MASCC < 21 o inestable)</summary>
+            <p>Objetivo: Cubrir Pseudomonas aeruginosa.</p>
+            <ul>
+                <li><b>Elección:</b> Piperacilina-Tazobactam 4.5 g IV cada 6 hs. o Cefepime 2 g IV cada 8 hs.</li>
+                <li><b>Meropenem 1 g IV c/8h:</b> Reservado para inestabilidad severa, antecedente BLEE, UTI previa o ATB previo. Si colonización KPC -> considerar Amikacina/Colistin.</li>
+                <li><b>¿Cuándo sumar Vancomicina?:</b> Inestabilidad/Shock, infección asociada a catéter, infección de partes blandas evidente, mucositis severa, o colonización por SAMR. <i>Si a las 48hs no aísla Gram positivo, suspender Vanco.</i></li>
+            </ul>
+        </details>
+        <details open>
+            <summary>B. BAJO RIESGO (MASCC ≥ 21, estables)</summary>
+            <ul>
+                <li><b>Elección (Vía Oral):</b> Ciprofloxacina 750 mg VO c/12h + Amoxicilina-Clavulánico 1 g VO c/12h.</li>
+                <li><b>Alternativa IV Guardia:</b> Ceftriaxona 1g + Amikacina 15mg/kg dosis única hasta alta.</li>
+                <li><i>Requiere tolerar vía oral, contención social, cercanía y no uso previo de quinolonas.</i></li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-meningitis">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Meningitis Aguda Bacteriana</h2>
+        <details>
+            <summary>1. Toma de Decisiones (Punción Lumbar vs TC)</summary>
+            <ul>
+                <li><b>Contraindicación PL:</b> Plaquetopenia <50.000 y RIN <1.5. Extraer Hemocultivos x2 (NUNCA deben retrasar ATB).</li>
+                <li><b>Banderas Rojas para TC Previa:</b> Inmunocompromiso severo, antecedente SNC, convulsiones recientes, edema de papila, alteración moderada/severa sensorio, déficit focal.</li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>REGLA DE ORO:</b> Si cumple criterios para TC previa, SE DEBE INICIAR TRATAMIENTO EMPÍRICO (Corticoide + ATB) ANTES del tomógrafo.
+        </div>
+        <details>
+            <summary>2. Líquido Cefalorraquídeo (Muestras)</summary>
+            <p>Pleocitosis >1000 (predominio PMN), Glucosa <40 (o relación <0.4 con sangre), Proteínas >100.</p>
+            <ul>
+                <li><b>Siempre:</b> Físico-químico (VDRL) + Bacteriológico (Gram, cultivo, BAAR).</li>
+                <li><b>Predominio Mononuclear:</b> Tubo viral (HSV, VZV, CMV, Enterovirus).</li>
+                <li><b>Inmunosuprimidos:</b> Micológico (tinta china, Ag Criptococo), Ziehl Nielsen, PCR Toxoplasma.</li>
+            </ul>
+        </details>
+        <h3>3. Algoritmo de Tratamiento Empírico</h3>
+        <details open>
+            <summary>Corticoterapia (Crítica)</summary>
+            <ul>
+                <li><b>Dexametasona:</b> 0.15 mg/kg (aprox 10 mg) IV cada 6h por 4 días.</li>
+                <li><b>Momento:</b> 15 a 20 min ANTES o CON la primera dosis de ATB. Si pasaron >4h, pierde beneficio.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>Antibióticos</summary>
+            <ul>
+                <li><b>Adultos 18-50 años:</b> Ceftriaxona 2 g IV cada 12 hs.</li>
+                <li><b>> 50 años / Inmunocompromiso / Embarazo / Alcohol (Listeria):</b> Ceftriaxona 2g IV c/12h + Ampicilina 2g IV c/4h. <i>(La Vancomicina se suma solo si hay alta sospecha de Neumococo resistente/alergia).</i></li>
+                <li><b>Asociada a Cuidados de la Salud (Neurocirugía/Derivación):</b> Vancomicina + Meropenem 2g IV c/8h (o Cefepime 2g c/8h).</li>
+                <li><b>Sospecha Viral:</b> Aciclovir 5 mg/kg IV cada 8 hs.</li>
+            </ul>
+        </details>
+        <p class="note"><b>Aislamiento / Profilaxis:</b> Gotas respiratorias hasta descartar Meningococo (24h de ATB). Contactos de Meningococo/Haemophilus: Ciprofloxacina 500mg VO dosis única o Rifampicina.</p>
+    </div>
+</div>
+
+<div class="container hidden" id="view-fod">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Síndrome Febril Prolongado (FOD)</h2>
+        <p class="note">Fiebre > 38.3°C, > 3 semanas de duración, sin diagnóstico tras 1 semana de estudios intrahospitalarios o 3 visitas ambulatorias.</p>
+        <details>
+            <summary>Etiologías (Las "4 Grandes")</summary>
+            <ul>
+                <li><b>Infecciones (25-30%):</b> Endocarditis (cultivos -), TBC extrapulmonar, abscesos ocultos, osteomielitis, VIH agudo, Sífilis.</li>
+                <li><b>Neoplasias (15-20%):</b> Linfomas, leucemias, Ca renal, hepatocarcinoma.</li>
+                <li><b>Inflamatorias/Autoinmunes (20-30%):</b> Still del adulto, Arteritis de la Temporal / Polimialgia Reumática, LES.</li>
+                <li><b>Misceláneas (15-20%):</b> Fármacos (ATB, alopurinol), TEP, fiebre facticia.</li>
+            </ul>
+        </details>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>REGLA DE ORO:</b> NO INICIAR TRATAMIENTO EMPÍRICO (ATB ni corticoides) en FOD clásico estable. Enmascara, esteriliza cultivos y modifica histologías. <i>Excepciones: Sepsis, neutropenia, Arteritis Temporal con riesgo de ceguera.</i>
+        </div>
+        <details>
+            <summary>Evaluación Fase 1 y 2</summary>
+            <ul>
+                <li><b>Anamnesis/Físico repetido:</b> La herramienta más rentable. Buscar soplos nuevos, adenopatías.</li>
+                <li><b>Fase 1:</b> Hemograma, VSG (si >100 sospechar arteritis, linfoma, endocarditis), PCR, LDH. Orina. Hemocultivos (3 a 6). Serologías virales, PPD. Rx Tórax, Eco Abdominal.</li>
+                <li><b>Fase 2 (Sala):</b> TC de tórax/abdomen/pelvis con contraste, ETE (si sospecha endocarditis), Laboratorio Inmunológico (FAN, FR, ANCA).</li>
+                <li><b>Fase 3:</b> Biopsias dirigidas o PET-TC.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<div class="container hidden" id="view-ippb">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Infecciones de Piel y Partes Blandas (IPPB)</h2>
+        <details>
+            <summary>1. Clasificación y Banderas Rojas</summary>
+            <ul>
+                <li><b>No Purulentas (Erisipela/Celulitis):</b> Streptococcus pyogenes.</li>
+                <li><b>Purulentas (Abscesos, Forúnculos):</b> SAMR-co predominante en Argentina.</li>
+                <li><b>Banderas Rojas (Fascitis Necrotizante):</b> Dolor desproporcionado, rápida progresión, bullas hemorrágicas, crepitación (gas), anestesia cutánea, Sepsis. <i>Emergencia Quirúrgica.</i></li>
+            </ul>
+            <p><i>Paso 1: Delimitar la lesión con marcador para evaluar progresión. Ecografía útil para buscar abscesos o TVP.</i></p>
+        </details>
+        <h3>2. Algoritmo de Tratamiento Empírico (SADI)</h3>
+        <details open>
+            <summary>A. Ambulatorio (Leves)</summary>
+            <ul>
+                <li><b>No purulenta (Celulitis):</b> Amoxicilina 1 g VO c/8h o Ciprofloxacina 500 c/12h.</li>
+                <li><b>Purulenta (SAMR-co):</b> Trimetoprima-Sulfametoxazol (TMS) 800/160 mg VO cada 12 hs. <i>Clindamicina evitar por alta resistencia.</i> Alternativa: Minociclina 100 mg c/12h.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>B. Internación Sala General (Moderadas a Severas)</summary>
+            <ul>
+                <li><b>Elección (Combinada):</b> Ampicilina-Sulbactam (AMS) 1.5 g IV cada 6 hs + TMS IV o VO cada 12 hs.</li>
+                <li><b>Alergia Penicilina:</b> Clindamicina 600 mg IV cada 8 hs.</li>
+                <li><b>Riesgo SAMR severo/falla:</b> Vancomicina 1 g cada 12 hs IV.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>C. Internación UTI / Sepsis / Alto Riesgo</summary>
+            <ul>
+                <li><b>Elección:</b> AMS 1.5 a 3 g IV cada 6 hs + Vancomicina 15-20 mg/kg IV cada 12 hs (ajustar a función renal).</li>
+                <li><b>Falla renal:</b> AMS + Linezolid 600 mg IV cada 12 hs.</li>
+            </ul>
+        </details>
+        <details open>
+            <summary>D. Infección Necrotizante</summary>
+            <ul>
+                <li>Interconsulta INMEDIATA con Cirugía.</li>
+                <li><b>ATB Empírico IV:</b> Meropenem 1g c/8h + Vancomicina 15mg/kg c/12h + Clindamicina 600mg c/8h (efecto antitoxina).</li>
+            </ul>
+        </details>
+        <p class="note"><b>Medidas Generales:</b> Reposo y elevación del miembro afectado (disminuye edema y mejora llegada del ATB). Tratar puertas de entrada (tiña pedis).</p>
+    </div>
+</div>
+
+<div class="container hidden" id="view-sepsis">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Sepsis y Shock Séptico (Hora de Oro)</h2>
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>Paquete de la Hora 1 (Surviving Sepsis):</b> Debe iniciarse en los primeros 60 minutos desde el reconocimiento.
+        </div>
+        <details open>
+            <summary>Acciones Críticas (1 a 5)</summary>
+            <ol>
+                <li><b>Medir Lactato Sérico:</b> Si > 2 mmol/L, repetir en 2-4 hs para evaluar aclaramiento.</li>
+                <li><b>Hemocultivos x2:</b> Extraer ANTES de los ATB. (No debe retrasar ATB > 45 min).</li>
+                <li><b>Antibióticos de Amplio Espectro IV:</b> Dosis plena en primeras 24-48h, no ajustar por falla renal de entrada.</li>
+                <li><b>Fluidoterapia (Reanimación):</b> Si hay hipotensión o Lactato ≥ 4. Dosis: <b>30 ml/kg de Ringer Lactato / SF</b> a pasar en primeras 3 horas.</li>
+                <li><b>Vasopresores:</b> Iniciar si PAM < 65 mmHg durante o después de fluidos.</li>
+            </ol>
+        </details>
+        <details open>
+            <summary>Soporte Hemodinámico Avanzado</summary>
+            <ul>
+                <li><b>1° Línea:</b> Noradrenalina (0.05 mcg/kg/min).</li>
+                <li><b>2° Línea:</b> Vasopresina o Adrenalina si requiere Nora > 0.25-0.5 mcg/kg/min.</li>
+                <li><b>Corticoides:</b> Solo en shock refractario (Hidrocortisona 200 mg/día).</li>
+            </ul>
+        </details>
+        <details>
+            <summary>Objetivos y Criterios</summary>
+            <ul>
+                <li><b>Metas:</b> PAM ≥ 65, Ritmo diurético ≥ 0.5 ml/kg/h, Relleno capilar normal, Aclaramiento de lactato >20%.</li>
+                <li><b>Internación UTI:</b> Requerimiento de vasopresores, falla respiratoria, disfunción orgánica múltiple.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
+<script>
+    function enterApp() {
+        document.getElementById('splash-screen').style.display = 'none';
+        document.getElementById('view-menu').classList.remove('hidden');
+    }
+
+    function nav(viewId) {
+        document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+        document.getElementById(viewId).classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* === NUEVAS FUNCIONES AGREGADAS === */
+    function calcularGlasgow() {
+        const o = parseInt(document.getElementById('gcs-o').value);
+        const v = parseInt(document.getElementById('gcs-v').value);
+        const m = parseInt(document.getElementById('gcs-m').value);
+        const total = o + v + m;
+        const res = document.getElementById('gcs-result');
+        
+        let diag = "";
+        if(total >= 13) {
+            diag = "<b>TEC Leve</b><br>Evaluar Criterios de Riesgo (Canadian Rule) para solicitar TC de cerebro.";
+            res.className = 'alert alert-success';
+        } else if(total >= 9) {
+            diag = "<b>TEC Moderado</b><br>TC de cerebro obligatoria e internación para monitoreo neurológico.";
+            res.className = 'alert alert-warning';
+        } else {
+            diag = "<b>TEC Grave</b><br>Intubación endotraqueal inmediata (asegurar vía aérea) y pase a UTI.";
+            res.className = 'alert alert-danger';
+        }
+        res.innerHTML = `<b>Puntaje GCS: ${total} / 15</b><br><hr style="margin:8px 0;">${diag}`;
+        res.style.display = 'block';
+    }
+
+    function calcularGanzoni() {
+        const peso = parseFloat(document.getElementById('ganzoni-peso').value);
+        const hbAct = parseFloat(document.getElementById('ganzoni-hb').value);
+        const hbObj = parseFloat(document.getElementById('ganzoni-obj').value) || 15;
+        const res = document.getElementById('ganzoni-result');
+        
+        if(isNaN(peso) || isNaN(hbAct) || peso <= 0) {
+            res.innerHTML = "Completá un peso y hemoglobina válidos.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+        
+        const deficit = (peso * (hbObj - hbAct) * 2.4) + 500;
+        
+        res.innerHTML = `<b>Déficit Total de Hierro: ${Math.round(deficit)} mg</b><br>
+                         <hr style="margin:8px 0;">
+                         Este valor se utiliza para planificar la dosis total a infundir en esquemas de Carboximaltosa (Ferinject) o Derisomaltosa (Monofer).`;
+        res.className = 'alert alert-info';
+        res.style.display = 'block';
+    }
+
+    function calcularIPR() {
+        const retic = parseFloat(document.getElementById('ipr-retic').value);
+        const hto = parseFloat(document.getElementById('ipr-hto').value);
+        const res = document.getElementById('ipr-result');
+        
+        if (isNaN(retic) || isNaN(hto) || hto <= 0 || retic < 0) {
+            res.innerHTML = "Completá valores válidos.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+
+        let factor = 1;
+        if (hto < 36 && hto >= 26) factor = 1.5;
+        else if (hto < 26 && hto >= 16) factor = 2;
+        else if (hto < 16) factor = 2.5;
+
+        const ipr = (retic * (hto / 45)) / factor;
+        
+        let diag = "";
+        if (ipr < 2) {
+            diag = "<b>Respuesta Hiporegenerativa (Central)</b><br>La médula no produce adecuadamente. Sospechar déficit de Hierro/B12/Fólico, aplasia, invasión medular o enfermedad crónica (ERC, hipotiroidismo).";
+            res.className = 'alert alert-danger';
+        } else if (ipr > 3) {
+            diag = "<b>Respuesta Regenerativa (Periférica)</b><br>La médula está activa. Sospechar hemólisis (pedir LDH, Bilirrubina, Haptoglobina, Coombs) o sangrado agudo reciente.";
+            res.className = 'alert alert-success';
+        } else {
+            diag = "<b>Respuesta Indeterminada</b><br>Evaluar contexto clínico evolutivo.";
+            res.className = 'alert alert-warning';
+        }
+
+        res.innerHTML = `<b>IPR: ${ipr.toFixed(2)}</b><br><hr style="margin:8px 0;">${diag}`;
+        res.style.display = 'block';
+    }
+
+    /* === JS NEUROLOGÍA === */
+    function calcularCAM() {
+        const c1 = document.getElementById('cam-1').checked;
+        const c2 = document.getElementById('cam-2').checked;
+        const c3 = document.getElementById('cam-3').checked;
+        const c4 = document.getElementById('cam-4').checked;
+        const res = document.getElementById('cam-result');
+        
+        if (c1 && c2 && (c3 || c4)) {
+            res.innerHTML = `<b>CAM POSITIVO: Diagnóstico de Delirium.</b><br>Priorizar tratamiento NO farmacológico e investigar causa subyacente.`;
+            res.className = 'alert alert-danger';
+        } else {
+            res.innerHTML = `<b>CAM Negativo.</b><br>No reúne criterios completos para Delirium en este momento.`;
+            res.className = 'alert alert-success';
+        }
+        res.style.display = 'block';
+    }
+
+    /* === JS NEFROLOGÍA === */
+    function calcularKDIGO() {
+        const crBasal = parseFloat(document.getElementById('kdigo-cr-basal').value);
+        const crActual = parseFloat(document.getElementById('kdigo-cr-actual').value);
+        const diuresis = parseInt(document.getElementById('kdigo-diuresis').value);
+        const res = document.getElementById('kdigo-result');
+        
+        if (isNaN(crBasal) || isNaN(crActual) || crBasal <= 0) {
+            res.innerHTML = "Ingrese valores de creatinina válidos.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+
+        let estadioCr = 0;
+        const aumentoAbsoluto = crActual - crBasal;
+        const ratio = crActual / crBasal;
+
+        if (ratio >= 3.0 || crActual >= 4.0) estadioCr = 3;
+        else if (ratio >= 2.0) estadioCr = 2;
+        else if (ratio >= 1.5 || aumentoAbsoluto >= 0.3) estadioCr = 1;
+
+        const estadioFinal = Math.max(estadioCr, diuresis);
+
+        if (estadioFinal === 0) {
+            res.innerHTML = `<b>Sin criterios de IRA actuales.</b>`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>Diagnóstico: IRA ESTADIO ${estadioFinal} (KDIGO)</b><br>Evaluado según el peor parámetro entre creatinina y ritmo diurético.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    /* === JS ENDOCRINOLOGÍA === */
+    function calcularInsulina() {
+        const peso = parseFloat(document.getElementById('insu-peso').value);
+        const factor = parseFloat(document.getElementById('insu-perfil').value);
+        const res = document.getElementById('insu-result');
+        
+        if (isNaN(peso) || peso <= 0) {
+            res.innerHTML = "Ingrese un peso válido.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+
+        const dtd = Math.round(peso * factor);
+        const basal = Math.round(dtd * 0.5);
+        const prandialTotal = dtd - basal;
+        const prandialDosis = Math.round(prandialTotal / 3);
+        const fCorrec = Math.round(1800 / dtd);
+
+        res.innerHTML = `<b>Dosis Total Diaria (DTD):</b> ${dtd} UI<hr style="margin:8px 0;">
+                         <b>Insulina Basal (50%):</b> ${basal} UI/día (Glargina/Degludec/NPH).<br>
+                         <b>Insulina Prandial (50%):</b> ${prandialDosis} UI antes de desayuno, almuerzo y cena.<br>
+                         <b>Factor de Corrección:</b> 1 UI baja aprox. <b>${fCorrec} mg/dL</b>.`;
+        res.className = 'alert alert-info';
+        res.style.display = 'block';
+    }
+
+    function calcularNaCorregido() {
+        const na = parseFloat(document.getElementById('cad-na').value);
+        const glu = parseFloat(document.getElementById('cad-glu').value);
+        const res = document.getElementById('cad-na-result');
+        
+        if (isNaN(na) || isNaN(glu)) {
+            res.innerHTML = "Ingrese ambos valores.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+
+        const naCorregido = na + (1.6 * ((glu - 100) / 100));
+        let accion = "";
+        
+        if (naCorregido >= 135) accion = "Cambiar fluidos a Solución Salina 0.45% a 250-500 ml/h.";
+        else accion = "Mantener Solución Fisiológica 0.9% a 250-500 ml/h.";
+
+        res.innerHTML = `<b>Sodio Corregido: ${naCorregido.toFixed(1)} mEq/L</b><br><hr style="margin:8px 0;"><b>Conducta:</b> ${accion}`;
+        res.className = 'alert alert-info';
+        res.style.display = 'block';
+    }
+
+    /* === JS RESTO DE LOS MÓDULOS === */
+    function calcularTroponina() {
+        const t0 = parseFloat(document.getElementById('trop0').value);
+        const t1 = parseFloat(document.getElementById('trop1').value);
+        const dolor3h = document.getElementById('dolor3h').value === 'si';
+        const res = document.getElementById('trop-result');
+        res.style.display = 'block'; res.className = 'alert';
+        if (isNaN(t0)) { res.innerHTML = "Ingrese valor 0h."; res.classList.add('alert-warning'); return; }
+        if (t0 >= 52 || (!isNaN(t1) && (t1 - t0) >= 5)) { res.innerHTML = "<b>CONFIRMACIÓN (Internación en UCO)</b><br>Tratamiento antitrombótico pleno y estrategia invasiva temprana."; res.classList.add('alert-danger'); return; }
+        if ((t0 < 5 && dolor3h) || (!isNaN(t1) && t0 < 12 && (t1 - t0) < 3)) { res.innerHTML = "<b>DESCARTE (Alta segura)</b><br>Si el paciente está asintomático y sin isquemia en ECG."; res.classList.add('alert-success'); return; }
+        res.innerHTML = "<b>ZONA GRIS (Observación)</b><br>Extraer nueva hs-cTnT a las 3hs. Realizar Eco TT."; res.classList.add('alert-warning');
+    }
+
+    function calcularWellsTVP() {
+        let score = 0;
+        if (document.getElementById('wtvp-cancer').checked) score += 1;
+        if (document.getElementById('wtvp-paralisis').checked) score += 1;
+        if (document.getElementById('wtvp-postracion').checked) score += 1;
+        if (document.getElementById('wtvp-dolor').checked) score += 1;
+        if (document.getElementById('wtvp-edema').checked) score += 1;
+        if (document.getElementById('wtvp-pantorrilla').checked) score += 1;
+        if (document.getElementById('wtvp-fovea').checked) score += 1;
+        if (document.getElementById('wtvp-venas').checked) score += 1;
+        if (document.getElementById('wtvp-previa').checked) score += 1;
+        if (document.getElementById('wtvp-alt').checked) score -= 2;
+
+        const res = document.getElementById('wtvp-result');
+        if (score <= 1) {
+            res.innerHTML = `<b>Score: ${score} puntos (TVP Improbable)</b><br>Solicitar Dímero-D ultrasensible (ajustar por edad en > 50 años: Edad x 10).`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>Score: ${score} puntos (TVP Probable)</b><br>Ecodoppler Venoso de MMII directo. El Dímero-D no tiene utilidad aquí.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularWellsTEP() {
+        let score = 0;
+        if (document.getElementById('wtep-tvp').checked) score += 3.0;
+        if (document.getElementById('wtep-alt').checked) score += 3.0;
+        if (document.getElementById('wtep-fc').checked) score += 1.5;
+        if (document.getElementById('wtep-inmov').checked) score += 1.5;
+        if (document.getElementById('wtep-previa').checked) score += 1.5;
+        if (document.getElementById('wtep-hemoptisis').checked) score += 1.0;
+        if (document.getElementById('wtep-cancer').checked) score += 1.0;
+
+        const res = document.getElementById('wtep-result');
+        if (score <= 4) {
+            res.innerHTML = `<b>Score: ${score} puntos (TEP Improbable)</b><br>Solicitar Dímero-D ajustado por edad (Edad x 10). Si es negativo, descarta TEP.`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>Score: ${score} puntos (TEP Probable)</b><br>Solicitar Angio-TC de Tórax directo. NO pedir Dímero-D.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularSPESI() {
+        let score = 0;
+        if (document.getElementById('spesi-edad').checked) score += 1;
+        if (document.getElementById('spesi-cancer').checked) score += 1;
+        if (document.getElementById('spesi-ic').checked) score += 1;
+        if (document.getElementById('spesi-fc').checked) score += 1;
+        if (document.getElementById('spesi-pas').checked) score += 1;
+        if (document.getElementById('spesi-sat').checked) score += 1;
+
+        const res = document.getElementById('spesi-result');
+        if (score === 0) {
+            res.innerHTML = `<b>sPESI: ${score} (Riesgo Bajo)</b><br>Mortalidad a 30 días muy baja (1%). Evaluar alta precoz si no hay disfunción de VD.`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>sPESI: ${score} (Riesgo Alto)</b><br>Mortalidad a 30 días elevada (10.9%). Internación obligatoria.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularSodio() {
+        const peso = parseFloat(document.getElementById('peso-hipo').value);
+        const factor = parseFloat(document.getElementById('factor-hipo').value);
+        const res = document.getElementById('hipo-result');
+        if (isNaN(peso) || peso <= 0) { res.innerHTML = "Ingresá un peso válido."; res.style.display = 'block'; return; }
+        const act = peso * factor;
+        const meqReponer = act * 8;
+        const litrosSF = meqReponer / 154;
+        res.innerHTML = `<b>ACT:</b> ${act.toFixed(1)} L<br>
+                         <b>Techo a reponer (8 mEq/L):</b> ${meqReponer.toFixed(0)} mEq Na<br><hr>
+                         Para aportar esta cantidad en 24hs, se necesitan <b>${litrosSF.toFixed(2)} Litros de Solución Fisiológica (0.9%)</b>.<br>
+                         <span class="note" style="display:block; margin-top:10px; color:#0d47a1;">
+                         <b>Enfermería:</b> 1 Litro SF aporta 154 mEq. Un Sachet de 500 ml aporta 77 mEq.
+                         </span>`;
+        res.style.display = 'block';
+    }
+
+    function calcularHipernatremia() {
+        const na = parseFloat(document.getElementById('na-hiper').value);
+        const peso = parseFloat(document.getElementById('peso-hiper').value);
+        const factor = parseFloat(document.getElementById('factor-hiper').value);
+        const res = document.getElementById('hiper-result');
+        if (isNaN(peso) || isNaN(na) || peso <= 0 || na <= 145) { res.innerHTML = "Valores inválidos. Na debe ser > 145."; res.className = 'alert alert-warning'; res.style.display = 'block'; return; }
+        const act = peso * factor;
+        const deficit = act * ((na / 140) - 1);
+        const reponer24h = (deficit / 2) * 1000;
+        res.innerHTML = `<b>ACT:</b> ${act.toFixed(1)} L<br><b>Déficit total:</b> ${deficit.toFixed(2)} L<br><hr>
+                         <b>Plan Primeras 24hs:</b><br>Reponer la mitad del déficit (${reponer24h.toFixed(0)} ml) + Pérdidas insensibles (~1500 ml).`;
+        res.className = 'alert alert-danger'; res.style.display = 'block';
+    }
+
+    function calcularAlbumina() {
+        const litros = parseFloat(document.getElementById('litros-ascitis').value);
+        const res = document.getElementById('albumina-result');
+        if (isNaN(litros) || litros <= 0) { 
+            res.innerHTML = "Ingresá un volumen válido."; res.className = 'alert alert-warning'; res.style.display = 'block'; return; 
+        }
+        if (litros < 5) {
+            res.innerHTML = "<b>Extracción menor a 5 Litros:</b><br>No es estrictamente obligatoria la albúmina. Reponer con expansores sintéticos (dextranos) o Solución Fisiológica según hemodinamia.";
+            res.className = 'alert alert-success';
+        } else {
+            const gramos = litros * 8;
+            const frascos = gramos / 10;
+            res.innerHTML = `<b>Extracción mayor a 5 Litros:</b><br>
+                             Dosis requerida: <b>${gramos.toFixed(0)} gramos de Albúmina Humana</b>.<br>
+                             <hr style="margin:10px 0; border-top:1px solid #f5c6cb;">
+                             En la práctica (usando frascos de 50ml al 20%):<br>
+                             <b>Infundir ${Math.ceil(frascos)} frascos endovenosos.</b>`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularFactorR() {
+        const altPac = parseFloat(document.getElementById('alt-pac').value);
+        const altLsn = parseFloat(document.getElementById('alt-lsn').value);
+        const falPac = parseFloat(document.getElementById('fal-pac').value);
+        const falLsn = parseFloat(document.getElementById('fal-lsn').value);
+        const res = document.getElementById('factor-r-result');
+        if ([altPac, altLsn, falPac, falLsn].some(isNaN)) {
+            res.innerHTML = "Completá los 4 campos."; res.className = 'alert alert-warning'; res.style.display = 'block'; return;
+        }
+        const factorR = (altPac / altLsn) / (falPac / falLsn);
+        let diag = ""; let etiologias = "";
+        if (factorR > 5) {
+            diag = "PATRÓN HEPATOCELULAR (R > 5)";
+            etiologias = "<b>> 1000 U/L:</b> Isquemia/Hipoxia, Tóxicos (Paracetamol), Hepatitis Viral Aguda.<br><b>< 500 U/L:</b> Alcohol (AST/ALT > 2), MAFLD, DILI, Autoinmune.";
+            res.className = 'alert alert-danger';
+        } else if (factorR < 2) {
+            diag = "PATRÓN COLESTÁSICO (R < 2)";
+            etiologias = "<b>Ecografía obligatoria.</b><br><b>Vía Dilatada:</b> Litiasis, tumores.<br><b>Vía No Dilatada:</b> CBP, CEP, DILI, Sepsis.";
+            res.className = 'alert alert-info';
+        } else {
+            diag = "PATRÓN MIXTO (R entre 2 y 5)";
+            etiologias = "Evaluar contexto clínico. Puede ser solapamiento de causas o fase evolutiva de un cuadro.";
+            res.className = 'alert alert-warning';
+        }
+        res.innerHTML = `<b>Factor R = ${factorR.toFixed(2)}</b><br><br><b>${diag}</b><br><hr style="margin:8px 0;">${etiologias}`;
+        res.style.display = 'block';
+    }
+
+    function calcularMaddrey() {
+        const tpPac = parseFloat(document.getElementById('tp-pac').value);
+        const tpCon = parseFloat(document.getElementById('tp-con').value);
+        const bili = parseFloat(document.getElementById('bili-pac').value);
+        const res = document.getElementById('maddrey-result');
+        if (isNaN(tpPac) || isNaN(tpCon) || isNaN(bili)) {
+            res.innerHTML = "Completá todos los campos."; res.className = 'alert alert-warning'; res.style.display = 'block'; return;
+        }
+        const maddrey = (4.6 * (tpPac - tpCon)) + bili;
+        if (maddrey >= 32) {
+            res.innerHTML = `<b>Índice de Maddrey = ${maddrey.toFixed(1)}</b><br><br><b>Severo (>32):</b> Alta mortalidad a 1 mes. Requiere iniciar Corticoides (Prednisolona 40 mg/día) tras descartar infecciones activas.`;
+            res.className = 'alert alert-danger';
+        } else {
+            res.innerHTML = `<b>Índice de Maddrey = ${maddrey.toFixed(1)}</b><br><br><b>Leve/Moderado (<32):</b> Bajo riesgo a corto plazo. No requiere corticoides de rutina.`;
+            res.className = 'alert alert-success';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularBISAP() {
+        let score = 0;
+        if (document.getElementById('bisap-b').checked) score++;
+        if (document.getElementById('bisap-i').checked) score++;
+        if (document.getElementById('bisap-s').checked) score++;
+        if (document.getElementById('bisap-a').checked) score++;
+        if (document.getElementById('bisap-p').checked) score++;
+        const res = document.getElementById('bisap-result');
+        res.style.display = 'block';
+        if (score >= 3) {
+            res.innerHTML = `<b>Score BISAP: ${score} puntos</b><br><b>ALTO RIESGO de mortalidad y severidad.</b> Criterio de UTI / Shock Room.`;
+            res.className = 'alert alert-danger';
+        } else {
+            res.innerHTML = `<b>Score BISAP: ${score} puntos</b><br><b>Riesgo Bajo/Intermedio.</b> Considerar manejo en Sala de Clínica Médica.`;
+            res.className = 'alert alert-info';
+        }
+    }
+
+    function calcularFluidosPanc() {
+        const peso = parseFloat(document.getElementById('peso-panc').value);
+        const res = document.getElementById('fluidos-panc-result');
+        if (isNaN(peso) || peso <= 0) {
+            res.innerHTML = "Ingresá un peso válido."; res.style.display = 'block'; return;
+        }
+        const minRate = peso * 5;
+        const maxRate = peso * 10;
+        res.innerHTML = `<b>Ritmo sugerido (Ringer Lactato):</b><br>Entre <b>${minRate.toFixed(0)} ml/h y ${maxRate.toFixed(0)} ml/h</b> durante las primeras 12-24 horas.<br><br><i>Ajustar si hay insuficiencia cardíaca o renal. Revaluar a las 6hs.</i>`;
+        res.style.display = 'block';
+    }
+
+    function calcularUreaCr() {
+        const urea = parseFloat(document.getElementById('urea-hda').value);
+        const cr = parseFloat(document.getElementById('cr-hda').value);
+        const res = document.getElementById('urea-cr-result');
+        if (isNaN(urea) || isNaN(cr) || cr <= 0) {
+            res.innerHTML = "Ingresá valores válidos."; res.className = 'alert alert-warning'; res.style.display = 'block'; return;
+        }
+        const ratio = urea / cr;
+        if (ratio > 35) {
+            res.innerHTML = `<b>Relación Urea/Cr: ${ratio.toFixed(1)}</b><br><br><b>Alta sospecha de HDA</b>. La relación > 30-40 sugiere reabsorción de proteínas sanguíneas en intestino y azoemia prerrenal.`;
+            res.className = 'alert alert-danger';
+        } else {
+            res.innerHTML = `<b>Relación Urea/Cr: ${ratio.toFixed(1)}</b><br><br>Relación normal/baja. No descarta HDA, pero orienta hacia un origen más bajo (HDB) o ausencia de sangrado masivo alto.`;
+            res.className = 'alert alert-info';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularGBS() {
+        const urea = parseFloat(document.getElementById('gbs-urea').value);
+        const hb = parseFloat(document.getElementById('gbs-hb').value);
+        const sexo = document.getElementById('gbs-sexo').value;
+        const tas = parseFloat(document.getElementById('gbs-tas').value);
+        const fc = parseFloat(document.getElementById('gbs-fc').value);
+        
+        const melena = document.getElementById('gbs-melena').checked;
+        const sincope = document.getElementById('gbs-sincope').checked;
+        const hepato = document.getElementById('gbs-hepato').checked;
+        const icc = document.getElementById('gbs-icc').checked;
+        
+        const res = document.getElementById('gbs-result');
+
+        if (isNaN(urea) || isNaN(hb) || isNaN(tas) || isNaN(fc)) {
+            res.innerHTML = "Completá todos los campos numéricos.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+
+        let score = 0;
+
+        if (urea >= 150) score += 6;
+        else if (urea >= 60) score += 4;
+        else if (urea >= 48) score += 3;
+        else if (urea >= 39) score += 2;
+
+        if (sexo === 'm') {
+            if (hb < 10.0) score += 6;
+            else if (hb >= 10.0 && hb < 12.0) score += 3;
+            else if (hb >= 12.0 && hb < 13.0) score += 1;
+        } else {
+            if (hb < 10.0) score += 6;
+            else if (hb >= 10.0 && hb < 12.0) score += 1;
+        }
+
+        if (tas < 90) score += 3;
+        else if (tas >= 90 && tas < 100) score += 2;
+        else if (tas >= 100 && tas < 110) score += 1;
+
+        if (fc >= 100) score += 1;
+        if (melena) score += 1;
+        if (sincope) score += 2;
+        if (hepato) score += 2;
+        if (icc) score += 2;
+
+        if (score <= 1) {
+            res.innerHTML = `<b>Score GBS: ${score} puntos</b><br><br><b>BAJO RIESGO.</b><br>Alta probabilidad de manejo ambulatorio seguro y endoscopía diferida.`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>Score GBS: ${score} puntos</b><br><br><b>ALTO RIESGO (>1).</b><br>Requiere internación hospitalaria y VEDA de urgencia / temprana.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularOakland() {
+        const edad = parseInt(document.getElementById('oak-edad').value);
+        const sexo = parseInt(document.getElementById('oak-sexo').value);
+        const previa = parseInt(document.getElementById('oak-hdbprevia').value);
+        const tacto = parseInt(document.getElementById('oak-tacto').value);
+        const fc = parseInt(document.getElementById('oak-fc').value);
+        const tas = parseInt(document.getElementById('oak-tas').value);
+        const hb = parseInt(document.getElementById('oak-hb').value);
+
+        const score = edad + sexo + previa + tacto + fc + tas + hb;
+        const res = document.getElementById('oakland-result');
+
+        if (score <= 8) {
+            res.innerHTML = `<b>Score Oakland: ${score} puntos</b><br><br><b>SANGRADO MENOR.</b><br>Alta probabilidad de egreso seguro y estudio ambulatorio.`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>Score Oakland: ${score} puntos</b><br><br><b>ALTO RIESGO (>8).</b><br>Requiere internación hospitalaria.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularCurb65() {
+        let score = 0;
+        if (document.getElementById('curb-c').checked) score++;
+        if (document.getElementById('curb-u').checked) score++;
+        if (document.getElementById('curb-r').checked) score++;
+        if (document.getElementById('curb-b').checked) score++;
+        if (document.getElementById('curb-65').checked) score++;
+        
+        const res = document.getElementById('curb-result');
+        if (score <= 1) {
+            res.innerHTML = `<b>CURB-65: ${score} puntos</b><br>Mortalidad < 2%. <b>Manejo Ambulatorio</b> (evaluar factores de riesgo extras).`;
+            res.className = 'alert alert-success';
+        } else if (score === 2) {
+            res.innerHTML = `<b>CURB-65: ${score} puntos</b><br>Mortalidad ~9%. <b>Internación en Sala General</b>.`;
+            res.className = 'alert alert-warning';
+        } else {
+            res.innerHTML = `<b>CURB-65: ${score} puntos</b><br>Mortalidad 15-40%. <b>Internación en UTI / Intermedios</b>.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+
+    function calcularMascc() {
+        const carga = parseInt(document.getElementById('mascc-carga').value);
+        let score = carga;
+        if (document.getElementById('mascc-hemo').checked) score += 5;
+        if (document.getElementById('mascc-epoc').checked) score += 4;
+        if (document.getElementById('mascc-tumor').checked) score += 4;
+        if (document.getElementById('mascc-hidra').checked) score += 3;
+        if (document.getElementById('mascc-fuera').checked) score += 3;
+        if (document.getElementById('mascc-edad').checked) score += 2;
+        
+        const res = document.getElementById('mascc-result');
+        if (score >= 21) {
+            res.innerHTML = `<b>Score MASCC: ${score} puntos</b><br><br><b>BAJO RIESGO (≥21).</b><br>Mortalidad < 5%. Candidatos a manejo ambulatorio o internación breve con ATB oral.`;
+            res.className = 'alert alert-success';
+        } else {
+            res.innerHTML = `<b>Score MASCC: ${score} puntos</b><br><br><b>ALTO RIESGO (<21).</b><br>Requieren internación OBLIGATORIA y ATB endovenoso de amplio espectro.`;
+            res.className = 'alert alert-danger';
+        }
+        res.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
