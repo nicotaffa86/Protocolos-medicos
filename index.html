@@ -184,6 +184,55 @@
     </div>
 </div>
 
+<div class="container hidden" id="view-acv">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>ACV Isquémico Agudo (Stroke)</h2>
+        
+        <div class="alert alert-danger" style="display:block; margin-bottom:15px;">
+            <b>CÓDIGO STROKE:</b> TC y Angio-TC de vasos de cuello y cerebro a TODO paciente con sospecha de ACV al ingreso. La RMN (Difusión/Flair) se reserva para ACV del despertar o duda diagnóstica (mismatch).
+        </div>
+
+        <h3>1. Calculadora de Elegibilidad rTPA</h3>
+        <p class="note">Evalúa ventana y contraindicaciones para trombólisis (Alteplase).</p>
+        
+        <div class="input-group"><label>Tiempo de evolución (Horas):</label><input type="number" id="rtpa-tiempo" step="0.5" placeholder="Ej: 2.5"></div>
+        <div class="input-group"><label>Tensión Arterial Sistólica (mmHg):</label><input type="number" id="rtpa-tas"></div>
+        <div class="input-group"><label>Tensión Arterial Diastólica (mmHg):</label><input type="number" id="rtpa-tad"></div>
+        
+        <label>Contraindicaciones Absolutas (Marcar si presentes):</label>
+        <div class="checkbox-group"><input type="checkbox" id="rtpa-c1"> <label>Hemorragia en TC</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="rtpa-c2"> <label>Antecedente de Hemorragia Intracraneana (HIC)</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="rtpa-c3"> <label>Cirugía mayor o trauma grave en últimos 14 días</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="rtpa-c4"> <label>ACV isquémico o TEC grave en últimos 3 meses</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="rtpa-c5"> <label>Hemorragia interna activa (GI/Urinaria < 21 días)</label></div>
+        <div class="checkbox-group"><input type="checkbox" id="rtpa-c6"> <label>Plaquetas < 100k, RIN > 1.7 o NOACS < 48hs</label></div>
+        
+        <button class="btn btn-outline" onclick="calcularRTPA()" style="margin-top: 10px;">Evaluar Candidato</button>
+        <div id="rtpa-result" class="alert"></div>
+
+        <details style="margin-top: 25px;" open>
+            <summary>2. Manejo de TA y Reperfusión</summary>
+            <table style="margin-top: 10px;">
+                <tr><th>Escenario</th><th>Conducta</th></tr>
+                <tr><td><b>Pre-rTPA</b></td><td>Bajar TA a <b>< 185/110</b> (Labetalol 10-20mg IV).</td></tr>
+                <tr><td><b>Post-rTPA</b></td><td>Mantener <b>< 180/105</b> por 24hs.</td></tr>
+                <tr><td><b>Trombectomía</b></td><td>Derivar si hay Oclusión de Gran Vaso (hasta 24hs si hay mismatch).</td></tr>
+            </table>
+        </details>
+
+        <details>
+            <summary>3. Cuidados Críticos (Primeras 24hs)</summary>
+            <ul>
+                <li><b>Cabecera:</b> 0° a 30° según tolerancia y riesgo de aspiración.</li>
+                <li><b>Nada por boca:</b> Hasta realizar test de deglución (evitar neumonía aspirativa).</li>
+                <li><b>Antiagregación:</b> AAS 100-325 mg. <b>ESPERAR 24 hs</b> si recibió trombolíticos (confirmar con TC control).</li>
+                <li><b>Temperatura:</b> Tratar fiebre > 38°C agresivamente.</li>
+            </ul>
+        </details>
+    </div>
+</div>
+
 <div class="container hidden" id="view-tec">
     <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
     <div class="card">
@@ -1742,6 +1791,42 @@
             res.className = 'alert alert-danger';
         }
         res.innerHTML = `<b>Puntaje GCS: ${total} / 15</b><br><hr style="margin:8px 0;">${diag}`;
+        res.style.display = 'block';
+    }
+
+function calcularRTPA() {
+        const tiempo = parseFloat(document.getElementById('rtpa-tiempo').value);
+        const tas = parseInt(document.getElementById('rtpa-tas').value);
+        const tad = parseInt(document.getElementById('rtpa-tad').value);
+        const res = document.getElementById('rtpa-result');
+
+        if (isNaN(tiempo) || isNaN(tas) || isNaN(tad)) {
+            res.innerHTML = "Completá el tiempo y la presión arterial.";
+            res.className = 'alert alert-warning';
+            res.style.display = 'block';
+            return;
+        }
+
+        const c1 = document.getElementById('rtpa-c1').checked;
+        const c2 = document.getElementById('rtpa-c2').checked;
+        const c3 = document.getElementById('rtpa-c3').checked;
+        const c4 = document.getElementById('rtpa-c4').checked;
+        const c5 = document.getElementById('rtpa-c5').checked;
+        const c6 = document.getElementById('rtpa-c6').checked;
+
+        if (c1 || c2 || c3 || c4 || c5 || c6) {
+            res.innerHTML = `<b>NO CANDIDATO A rTPA.</b><br>Presenta al menos una contraindicación absoluta. Evaluar Trombectomía Mecánica si hay oclusión de gran vaso en Angio-TC.`;
+            res.className = 'alert alert-danger';
+        } else if (tiempo > 4.5) {
+            res.innerHTML = `<b>NO CANDIDATO A rTPA (Fuera de ventana).</b><br>Tiempo > 4.5 horas. Evaluar urgencia para Trombectomía Mecánica (hasta 24hs con criterios de mismatch).`;
+            res.className = 'alert alert-danger';
+        } else if (tas > 185 || tad > 110) {
+            res.innerHTML = `<b>REQUIERE CONTROL DE TA PREVIO.</b><br>El paciente está en ventana y sin contraindicaciones, pero la TA es > 185/110. Administrar Labetalol IV y reevaluar.`;
+            res.className = 'alert alert-warning';
+        } else {
+            res.innerHTML = `<b>CANDIDATO IDEAL PARA rTPA.</b><br><br><b>Dosis Alteplase: 0.9 mg/kg (Máx 90 mg)</b>.<br>Pasar 10% en bolo (1 min) y el 90% restante en 60 min.<br>Mantener TA < 180/105 durante y después.`;
+            res.className = 'alert alert-success';
+        }
         res.style.display = 'block';
     }
 
