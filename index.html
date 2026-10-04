@@ -4,32 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GuardIA</title>
+    <script>
+        /* Tema: 'claro' | 'oscuro' | 'auto' (sigue al celular). Se aplica antes de pintar para evitar el parpadeo. */
+        window.GuardIATema = (function () {
+            var K = 'guardia_tema', mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+            function get() { try { var t = localStorage.getItem(K); return (t === 'claro' || t === 'oscuro') ? t : 'auto'; } catch (e) { return 'auto'; } }
+            function aplicar() {
+                var t = get(), osc = t === 'oscuro' || (t === 'auto' && mq && mq.matches);
+                document.documentElement.setAttribute('data-theme', osc ? 'dark' : 'light');
+            }
+            function set(t) { try { localStorage.setItem(K, t); } catch (e) {} aplicar(); }
+            if (mq) { (mq.addEventListener ? mq.addEventListener('change', aplicar) : mq.addListener(aplicar)); }
+            aplicar();
+            return { get: get, set: set };
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1A5F7A; --primary-dark: #113f52; --secondary: #eef2f5; --danger: #e63946; --success: #2a9d8f; --warning: #e9c46a; --dark: #2b2d42; --bg-color: #f4f7f6; --card-bg: #ffffff; }
+        :root { --primary: #1A5F7A; --primary-btn: #1A5F7A; --primary-dark: #113f52; --heading: #113f52; --secondary: #eef2f5; --danger: #e63946; --success: #2a9d8f; --warning: #e9c46a; --dark: #2b2d42; --bg-color: #f4f7f6; --card-bg: #ffffff; --input-bg: #f9fafb; --input-bd: #d1d5db; --det-bg: #f8f9fa; --det-bd: #e9ecef; --det-text: #4a4a4a; --th-bg: #e9ecef; --td-bd: #dee2e6; --muted: #6c757d; --card-bd: rgba(0,0,0,0.05); --chip-bg: #eaf2f5; --star: #d99a1c; }
+        html[data-theme="dark"] { color-scheme: dark; --primary: #5fb3d1; --heading: #8cc9de; --secondary: #22313a; --dark: #e8eef1; --bg-color: #10161a; --card-bg: #1a2328; --input-bg: #232f36; --input-bd: #3a4a54; --det-bg: #202b31; --det-bd: #2f3d45; --det-text: #c9d3d8; --th-bg: #2a3942; --td-bd: #34444d; --muted: #9aa8b0; --card-bd: rgba(255,255,255,0.06); --chip-bg: #22313a; }
+        html[data-theme="dark"] .alert-success { background-color: #14301a; color: #b7e4c0; border-color: #24502c; }
+        html[data-theme="dark"] .alert-danger { background-color: #3a1a1a; color: #f4c2c2; border-color: #5b2a2a; }
+        html[data-theme="dark"] .alert-info { background-color: #12283d; color: #b5d4f4; border-color: #1f4468; }
+        html[data-theme="dark"] .alert-warning { background-color: #3a2e12; color: #f3dca3; border-color: #5b4a1d; }
         body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background-color: var(--bg-color); color: var(--dark); line-height: 1.5; }
         
         /* PANTALLA DE INICIO */
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--secondary) 0%, #ffffff 100%); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--secondary) 0%, var(--card-bg) 100%); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #splash-screen img { max-width: 200px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));animation: fadeInUp 0.8s ease-out; }
         #splash-screen h2 { animation: fadeInUp 0.8s ease-out 0.3s both; }
 #splash-screen .btn-ingresar { animation: fadeInUp 0.8s ease-out 0.6s both; }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .btn-ingresar { padding: 15px 40px; font-size: 1.2rem; background-color: var(--primary); color: white; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3); transition: transform 0.2s; }
+        .btn-ingresar { padding: 15px 40px; font-size: 1.2rem; background-color: var(--primary-btn); color: white; border: none; border-radius: 30px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3); transition: transform 0.2s; }
         .btn-ingresar:active { transform: scale(0.95); }
 
-        header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 20px; font-size: 1.3rem; font-weight: 700; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        header { background: linear-gradient(135deg, var(--primary-btn) 0%, var(--primary-dark) 100%); color: white; padding: 20px; font-size: 1.3rem; font-weight: 700; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .container { padding: 20px; max-width: 600px; margin: auto; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); }
+        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--card-bd); }
         h2 { font-size: 1.2rem; color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 8px; margin-bottom: 15px; }
-        h3 { font-size: 1.05rem; margin-top: 20px; color: var(--primary-dark); border-left: 4px solid var(--primary); padding-left: 8px; }
-        .btn { display: block; width: 100%; padding: 14px; margin-bottom: 12px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.1s; text-align: center; }
+        h3 { font-size: 1.05rem; margin-top: 20px; color: var(--heading); border-left: 4px solid var(--primary); padding-left: 8px; }
+        .btn { display: block; width: 100%; padding: 14px; margin-bottom: 12px; background-color: var(--primary-btn); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.1s; text-align: center; }
         .btn:active { transform: scale(0.98); }
         .btn-outline { background-color: transparent; color: var(--primary); border: 2px solid var(--primary); }
-        .btn-back { background-color: transparent; color: #6c757d; border: 1px solid #6c757d; margin-bottom: 20px; width: auto; display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
+        .btn-back { background-color: transparent; color: var(--muted); border: 1px solid var(--muted); margin-bottom: 20px; width: auto; display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; }
         .input-group { margin-bottom: 15px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
-        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: #f9fafb; }
+        input[type="number"], select { width: 100%; padding: 10px; border: 1px solid var(--input-bd); border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: var(--input-bg); color: var(--dark); }
         .checkbox-group { display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9rem; }
         .checkbox-group input { width: auto; margin-right: 10px; transform: scale(1.2); }
         .alert { padding: 15px; border-radius: 8px; margin-top: 15px; font-weight: 500; display: none; }
@@ -40,23 +60,47 @@
         .hidden { display: none !important; }
         ul { padding-left: 20px; margin-top: 5px; }
         li { margin-bottom: 8px; }
-        .note { font-size: 0.85rem; color: #6c757d; font-style: italic; }
-        details { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px; margin-bottom: 12px; }
-        summary { font-weight: 600; color: var(--primary-dark); cursor: pointer; outline: none; list-style: none; font-size: 0.95rem; }
+        .note { font-size: 0.85rem; color: var(--muted); font-style: italic; }
+        details { background-color: var(--det-bg); border: 1px solid var(--det-bd); border-radius: 8px; padding: 10px; margin-bottom: 12px; }
+        summary { font-weight: 600; color: var(--heading); cursor: pointer; outline: none; list-style: none; font-size: 0.95rem; }
         summary::-webkit-details-marker { display: none; }
         summary::before { content: "►"; display: inline-block; margin-right: 8px; font-size: 0.8rem; transition: transform 0.2s; }
         details[open] summary::before { transform: rotate(90deg); }
-        details p, details ul { margin-top: 10px; font-size: 0.9rem; color: #4a4a4a; }
+        details p, details ul { margin-top: 10px; font-size: 0.9rem; color: var(--det-text); }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
-        th { background-color: #e9ecef; color: var(--primary-dark); }
+        th, td { border: 1px solid var(--td-bd); padding: 8px; text-align: left; }
+        th { background-color: var(--th-bg); color: var(--heading); }
+
+        /* MENÚ: buscador, favoritos, recientes, secciones desplegables, tema */
+        .m-search { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--input-bd); border-radius: 12px; padding: 0 12px; margin-bottom: 14px; }
+        .m-search input { flex: 1; border: none; background: transparent; padding: 12px 0; font-size: 1rem; color: var(--dark); outline: none; min-width: 0; width: auto; }
+        .m-label { font-size: 0.72rem; letter-spacing: .5px; color: var(--muted); margin: 4px 2px 8px; font-weight: 600; }
+        .m-recent { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 14px; padding-bottom: 4px; }
+        .m-chip { white-space: nowrap; background: var(--chip-bg); color: var(--primary); border: none; border-radius: 99px; padding: 8px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .m-sec-head { display: flex; align-items: center; cursor: pointer; margin: 0; border-bottom: none; padding-bottom: 0; user-select: none; }
+        .m-sec-head .m-count { margin-left: auto; margin-right: 10px; font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+        .m-sec-head .m-arrow { transition: transform .2s; font-size: 0.8rem; }
+        .m-sec.m-closed .m-arrow { transform: rotate(-90deg); }
+        .m-sec.m-closed .m-row { display: none; }
+        .m-sec:not(.m-closed) .m-sec-head { border-bottom: 2px solid var(--secondary); padding-bottom: 8px; margin-bottom: 12px; }
+        .m-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin-bottom: 12px; }
+        .m-hit { flex-basis: 100%; font-size: 0.75rem; color: var(--muted); margin-top: -4px; padding-left: 4px; }
+        .m-row .btn { margin-bottom: 0; flex: 1; }
+        .m-star { background: transparent; border: 1px solid var(--input-bd); border-radius: 8px; width: 48px; font-size: 1.3rem; color: var(--muted); cursor: pointer; flex: none; }
+        .m-star.on { color: var(--star); border-color: var(--star); }
+        .m-theme { display: flex; gap: 6px; align-items: center; justify-content: center; margin: 6px 0 24px; font-size: 0.8rem; color: var(--muted); }
+        .m-theme button { background: transparent; border: 1px solid var(--input-bd); color: var(--dark); border-radius: 99px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; }
+        .m-theme button.on { background: var(--primary-btn); border-color: var(--primary-btn); color: #fff; }
+        .m-empty { text-align: center; color: var(--muted); padding: 24px 0; }
+        #view-menu.m-searching .m-sec.m-closed .m-row { display: flex; }
+        #view-menu.m-searching .m-sec.m-closed .m-sec-head { border-bottom: 2px solid var(--secondary); padding-bottom: 8px; margin-bottom: 12px; }
     </style>
 </head>
 <body>
 
 <div id="splash-screen">
-    <img src="guardia-concepto4_1.svg"
-    <h2 style="border: none; color: var(--primary-dark); margin-bottom: 30px;">Protocolos de Actuacion Medica</h2>
+    <img src="guardia-concepto4_1.svg" alt="GuardIA">
+    <h2 style="border: none; color: var(--heading); margin-bottom: 30px;">Protocolos de Actuacion Medica</h2>
     <button class="btn-ingresar" onclick="enterApp()">Ingresar</button>
 </div>
 
@@ -2082,7 +2126,7 @@ function calcularRTPA() {
         res.innerHTML = `<b>ACT:</b> ${act.toFixed(1)} L<br>
                          <b>Techo a reponer (8 mEq/L):</b> ${meqReponer.toFixed(0)} mEq Na<br><hr>
                          Para aportar esta cantidad en 24hs, se necesitan <b>${litrosSF.toFixed(2)} Litros de Solución Fisiológica (0.9%)</b>.<br>
-                         <span class="note" style="display:block; margin-top:10px; color:#0d47a1;">
+                         <span class="note" style="display:block; margin-top:10px; color:inherit;">
                          <b>Enfermería:</b> 1 Litro SF aporta 154 mEq. Un Sachet de 500 ml aporta 77 mEq.
                          </span>`;
         res.style.display = 'block';
@@ -2349,5 +2393,229 @@ function calcularRTPA() {
     }
 </script>
 
+<style>
+    #premium-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:10000; align-items:center; justify-content:center; padding:16px; }
+    #premium-modal .pm-box { background:var(--card-bg); border-radius:14px; padding:22px; max-width:380px; width:100%; text-align:center; }
+    #premium-modal h3 { margin:0 0 8px; color:var(--primary); }
+    #premium-modal p { margin:0 0 14px; font-size:.95rem; color:var(--dark); }
+    #premium-modal .btn { width:100%; margin-top:8px; }
+    #premium-modal .pm-link { background:none; border:none; color:var(--primary); text-decoration:underline; margin-top:12px; cursor:pointer; font-size:.9rem; }
+</style>
+<div id="premium-modal">
+    <div class="pm-box">
+        <h3>GuardIA Premium</h3>
+        <p>Calculadoras clínicas interactivas y modo offline completo. Los protocolos de texto siguen siendo gratis.</p>
+        <button class="btn" onclick="GuardIAPremium.comprar('mensual')">Plan mensual</button>
+        <button class="btn" onclick="GuardIAPremium.comprar('anual')">Plan anual</button>
+        <button class="pm-link" onclick="GuardIAPremium.restaurar()">Restaurar compra</button><br>
+        <button class="pm-link" onclick="GuardIAPremium.cerrar()">Ahora no</button>
+        <div id="pm-debug" style="display:none; margin-top:14px; border-top:1px dashed #ccc; padding-top:10px;">
+            <button class="btn btn-outline" onclick="GuardIAPremium.setTest(true)">[PRUEBA] Activar premium</button>
+            <button class="btn btn-outline" onclick="GuardIAPremium.setTest(false)">[PRUEBA] Quitar premium</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* === GuardIA Premium (candado solo en la app Android; la web no se toca) ===
+   Paso 2: candado + pantalla. Las compras reales (Google Play Billing) se conectan en el paso 3.
+   IMPORTANTE ANTES DE PUBLICAR EN GOOGLE PLAY: poner DEBUG_PREMIUM = false. */
+const GuardIAPremium = (function () {
+    const DEBUG_PREMIUM = true;
+    const GRATIS = ['calcularGlasgow'];   // calculadoras que quedan libres para todos
+    const KEY = 'guardia_premium_test';
+
+    function esApp() {
+        try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); }
+        catch (e) { return false; }
+    }
+    function esPremium() {
+        // Paso 3: acá se consultará a Google Play si la suscripción está activa.
+        try { return DEBUG_PREMIUM && localStorage.getItem(KEY) === '1'; } catch (e) { return false; }
+    }
+    function bloqueado(nombre) { return esApp() && !esPremium() && GRATIS.indexOf(nombre) === -1; }
+
+    function abrir() {
+        document.getElementById('pm-debug').style.display = DEBUG_PREMIUM ? 'block' : 'none';
+        document.getElementById('premium-modal').style.display = 'flex';
+    }
+    function cerrar() { document.getElementById('premium-modal').style.display = 'none'; }
+
+    function actualizarBotones() {
+        document.querySelectorAll('button[onclick^="calcular"]').forEach(function (b) {
+            const nombre = b.getAttribute('onclick').replace(/\(.*$/, '');
+            const txt = b.textContent.replace(/^🔒\s*/, '');
+            b.textContent = bloqueado(nombre) ? '🔒 ' + txt : txt;
+        });
+    }
+
+    function proteger() {
+        Object.keys(window).filter(function (n) { return /^calcular/.test(n) && typeof window[n] === 'function'; })
+        .forEach(function (n) {
+            const original = window[n];
+            window[n] = function () {
+                if (bloqueado(n)) { abrir(); return; }
+                return original.apply(this, arguments);
+            };
+        });
+        actualizarBotones();
+    }
+
+    window.addEventListener('load', proteger);
+
+    return {
+        comprar: function (plan) { alert('Las compras se activan en el próximo paso (plan ' + plan + ').'); },
+        restaurar: function () { alert('Restaurar compra se activa en el próximo paso.'); },
+        setTest: function (v) { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {} cerrar(); actualizarBotones(); },
+        cerrar: cerrar,
+        debug: DEBUG_PREMIUM && esApp(),
+        activo: esPremium
+    };
+})();
+</script>
+<script>
+/* === Menú: buscador, favoritos, recientes, secciones desplegables y selector de tema ===
+   Se arma sobre los botones que ya existen en #view-menu; no cambia ningún contenido clínico. */
+(function () {
+    var K_FAV = 'guardia_fav', K_REC = 'guardia_rec', MAX_REC = 5;
+    function cargar(k) { try { var v = JSON.parse(localStorage.getItem(k)); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+    function guardar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+    function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; }
+
+    var menu = document.getElementById('view-menu');
+    var favs = cargar(K_FAV), recs = cargar(K_REC);
+    var titulos = {}, filas = [], secciones = [];
+
+    var buscador = el('div', 'm-search');
+    var inp = document.createElement('input');
+    inp.type = 'search'; inp.placeholder = 'Buscar protocolo, score o tema'; inp.setAttribute('aria-label', 'Buscar protocolo');
+    buscador.appendChild(el('span', '', '🔍')); buscador.appendChild(inp);
+
+    var recBox = el('div'), recLabel = el('div', 'm-label', 'RECIENTES'), recRow = el('div', 'm-recent');
+    recBox.appendChild(recLabel); recBox.appendChild(recRow);
+    var favCard = el('div', 'card'), favTitulo = el('h2', '', '★ Favoritos'), favRows = el('div');
+    favCard.appendChild(favTitulo); favCard.appendChild(favRows);
+    var vacio = el('div', 'm-empty', 'No se encontró ningún protocolo.'); vacio.style.display = 'none';
+
+    menu.insertBefore(vacio, menu.firstChild); menu.insertBefore(favCard, menu.firstChild);
+    menu.insertBefore(recBox, menu.firstChild); menu.insertBefore(buscador, menu.firstChild);
+
+    function idDe(btn) { var m = /nav\('([^']+)'\)/.exec(btn.getAttribute('onclick') || ''); return m ? m[1] : null; }
+
+    function marcarEstrellas() {
+        menu.querySelectorAll('.m-star').forEach(function (s) {
+            var on = favs.indexOf(s.getAttribute('data-id')) > -1;
+            s.classList.toggle('on', on); s.textContent = on ? '★' : '☆';
+            s.setAttribute('aria-label', on ? 'Quitar de favoritos' : 'Agregar a favoritos');
+        });
+    }
+    function alternarFav(id) {
+        var i = favs.indexOf(id); if (i > -1) favs.splice(i, 1); else favs.push(id);
+        guardar(K_FAV, favs); armarFavoritos(); marcarEstrellas();
+    }
+    function filaCon(id, titulo) {
+        var fila = el('div', 'm-row'), b = el('button', 'btn btn-outline', titulo);
+        b.type = 'button'; b.onclick = function () { nav(id); };
+        var s = el('button', 'm-star'); s.type = 'button'; s.setAttribute('data-id', id);
+        s.onclick = function () { alternarFav(id); };
+        fila.appendChild(b); fila.appendChild(s); return fila;
+    }
+    function armarFavoritos() {
+        favRows.innerHTML = '';
+        favs.filter(function (id) { return titulos[id]; }).forEach(function (id) { favRows.appendChild(filaCon(id, titulos[id])); });
+        favCard.style.display = favRows.children.length ? '' : 'none';
+        marcarEstrellas();
+    }
+    function armarRecientes() {
+        recRow.innerHTML = '';
+        recs.filter(function (id) { return titulos[id]; }).forEach(function (id) {
+            var c = el('button', 'm-chip', titulos[id]); c.type = 'button'; c.onclick = function () { nav(id); }; recRow.appendChild(c);
+        });
+        recBox.style.display = recRow.children.length ? '' : 'none';
+    }
+
+    /* Secciones desplegables + estrella en cada protocolo */
+    [].slice.call(menu.querySelectorAll(':scope > .card')).forEach(function (card) {
+        if (card === favCard || card.querySelector('[onclick*="view-bibliografia"]')) return;
+        var h2 = card.querySelector('h2'); if (!h2) return;
+        var botones = [].slice.call(card.querySelectorAll('button.btn'));
+        var titulo = h2.textContent;
+        h2.className = 'm-sec-head'; h2.innerHTML = '';
+        h2.appendChild(el('span', '', titulo)); h2.appendChild(el('span', 'm-count', String(botones.length))); h2.appendChild(el('span', 'm-arrow', '▼'));
+        card.classList.add('m-sec', 'm-closed');
+        h2.onclick = function () { card.classList.toggle('m-closed'); };
+        botones.forEach(function (b) {
+            var id = idDe(b); if (!id) return;
+            titulos[id] = b.textContent.trim();
+            var fila = el('div', 'm-row'); b.parentNode.insertBefore(fila, b); fila.appendChild(b);
+            var s = el('button', 'm-star'); s.type = 'button'; s.setAttribute('data-id', id); s.onclick = function () { alternarFav(id); };
+            fila.appendChild(s); filas.push({ fila: fila, t: norm(titulos[id]), id: id });
+        });
+        secciones.push(card);
+    });
+
+    /* Búsqueda por contenido: se arma el texto de cada protocolo la primera vez que se busca */
+    var textos = {};
+    function textoDe(id) {
+        if (textos[id] === undefined) { var v = document.getElementById(id); textos[id] = v ? norm(v.textContent) : ''; }
+        return textos[id];
+    }
+
+    /* Búsqueda (ignora mayúsculas y tildes) */
+    inp.addEventListener('input', function () {
+        var q = norm(inp.value.trim()), hay = false;
+        menu.classList.toggle('m-searching', !!q);
+        filas.forEach(function (f) {
+            var enTitulo = !q || f.t.indexOf(q) > -1;
+            var enTexto = !enTitulo && q.length >= 3 && textoDe(f.id).indexOf(q) > -1;
+            f.fila.style.display = (enTitulo || enTexto) ? '' : 'none';
+            var nota = f.fila.querySelector('.m-hit');
+            if (enTexto) {
+                if (!nota) { nota = el('div', 'm-hit'); f.fila.appendChild(nota); }
+                nota.textContent = 'Aparece dentro del protocolo';
+            } else if (nota) { nota.remove(); }
+        });
+        secciones.forEach(function (c) {
+            var visibles = [].slice.call(c.querySelectorAll('.m-row')).some(function (r) { return r.style.display !== 'none'; });
+            c.style.display = visibles ? '' : 'none'; if (visibles) hay = true;
+        });
+        var oculto = !!q; favCard.style.display = oculto ? 'none' : (favRows.children.length ? '' : 'none');
+        recBox.style.display = oculto ? 'none' : (recRow.children.length ? '' : 'none');
+        vacio.style.display = (q && !hay) ? '' : 'none';
+    });
+
+    /* Selector de tema al final del menú */
+    var tema = el('div', 'm-theme'); tema.appendChild(el('span', '', 'Tema:'));
+    var opciones = [['claro', 'Claro'], ['oscuro', 'Oscuro'], ['auto', 'Automático']], botonesTema = [];
+    opciones.forEach(function (o) {
+        var b = el('button', '', o[1]); b.type = 'button';
+        b.onclick = function () { GuardIATema.set(o[0]); marcarTema(); };
+        botonesTema.push([o[0], b]); tema.appendChild(b);
+    });
+    function marcarTema() { botonesTema.forEach(function (p) { p[1].classList.toggle('on', p[0] === GuardIATema.get()); }); }
+    menu.appendChild(tema); marcarTema();
+
+    /* Interruptor de PRUEBA del premium (solo existe mientras GuardIAPremium.debug sea true) */
+    if (typeof GuardIAPremium !== 'undefined' && GuardIAPremium.debug) {
+        var dbg = el('div', 'm-theme'), bd = el('button', ''); bd.type = 'button';
+        function marcarDbg() { bd.textContent = '[PRUEBA] Premium: ' + (GuardIAPremium.activo() ? 'ACTIVO (tocar para quitar)' : 'inactivo (tocar para activar)'); }
+        bd.onclick = function () { GuardIAPremium.setTest(!GuardIAPremium.activo()); marcarDbg(); };
+        marcarDbg(); dbg.appendChild(bd); menu.appendChild(dbg);
+    }
+
+    /* Recientes: se guarda cada protocolo que se abre */
+    var navOriginal = window.nav;
+    window.nav = function (id) {
+        navOriginal(id);
+        if (id !== 'view-menu' && titulos[id]) {
+            recs = [id].concat(recs.filter(function (x) { return x !== id; })).slice(0, MAX_REC);
+            guardar(K_REC, recs); armarRecientes();
+        }
+    };
+
+    armarFavoritos(); armarRecientes();
+})();
+</script>
 </body>
 </html>
