@@ -1192,8 +1192,9 @@
         <div id="bisap-result" class="alert"></div>
 
         <h3 style="margin-top: 25px;">3. Fluidoterapia (Ringer Lactato)</h3>
-        <p class="note">Hidratación moderada. Objetivo (primeras 12-24h): Diuresis > 0.5 ml/kg/h, y descenso de Hematocrito/BUN.</p>
+        <p class="note">Hidratación moderada (la hidratación agresiva aumenta la sobrecarga de volumen sin mejorar la evolución). Objetivo: Diuresis > 0.5 ml/kg/h, y descenso de Hematocrito/BUN.</p>
         <div class="input-group"><label>Peso del Paciente (kg):</label><input type="number" id="peso-panc"></div>
+        <div class="checkbox-group"><input type="checkbox" id="hipovol-panc"> <label>Hipovolemia (hipotensión, taquicardia, mala perfusión)</label></div>
         <button class="btn btn-outline" onclick="calcularFluidosPanc()">Calcular Ritmo de Infusión</button>
         <div id="fluidos-panc-result" class="alert alert-info"></div>
     </div>
@@ -2194,9 +2195,16 @@ function calcularRTPA() {
         if (isNaN(peso) || peso <= 0) {
             res.innerHTML = "Ingresá un peso válido."; res.style.display = 'block'; return;
         }
-        const minRate = peso * 5;
-        const maxRate = peso * 10;
-        res.innerHTML = `<b>Ritmo sugerido (Ringer Lactato):</b><br>Entre <b>${minRate.toFixed(0)} ml/h y ${maxRate.toFixed(0)} ml/h</b> durante las primeras 12-24 horas.<br><br><i>Ajustar si hay insuficiencia cardíaca o renal. Revaluar a las 6hs.</i>`;
+        const rate = peso * 1.5;
+        const hipovol = document.getElementById('hipovol-panc').checked;
+        let html = `<b>Ringer Lactato (hidratación moderada)</b><br>`;
+        if (hipovol) {
+            html += `1°: <b>Bolo de ${(peso * 10).toFixed(0)} ml</b> (10 ml/kg).<br>Luego: <b>${rate.toFixed(0)} ml/h</b> (1.5 ml/kg/h).`;
+        } else {
+            html += `<b>${rate.toFixed(0)} ml/h</b> (1.5 ml/kg/h), sin bolo inicial.`;
+        }
+        html += `<br><br><i>Es más importante en las primeras 24 hs. Reevaluar a las 6 hs y luego a las 24-48 hs (BUN, hematocrito, diuresis > 0.5 ml/kg/h). Precaución y control de sobrecarga de volumen si hay insuficiencia cardíaca o renal.</i>`;
+        res.innerHTML = html;
         res.style.display = 'block';
     }
 
