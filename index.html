@@ -2404,9 +2404,10 @@ function calcularRTPA() {
 <div id="premium-modal">
     <div class="pm-box">
         <h3>GuardIA Premium</h3>
-        <p>Calculadoras clínicas interactivas y modo offline completo. Los protocolos de texto siguen siendo gratis.</p>
-        <button class="btn" onclick="GuardIAPremium.comprar('mensual')">Plan mensual</button>
-        <button class="btn" onclick="GuardIAPremium.comprar('anual')">Plan anual</button>
+        <p>Calculadoras clínicas interactivas. Los protocolos de texto y la calculadora de Glasgow siguen siendo gratis.</p>
+        <button class="btn" id="pm-mensual" onclick="GuardIAPremium.comprar('mensual')">Plan mensual</button>
+        <button class="btn" id="pm-anual" onclick="GuardIAPremium.comprar('anual')">Plan anual</button>
+        <p id="pm-nota" style="font-size:.78rem; color:var(--muted); margin:10px 0 0;">Suscripción con renovación automática. Podés cancelarla cuando quieras desde Google Play.</p>
         <button class="pm-link" onclick="GuardIAPremium.restaurar()">Restaurar compra</button><br>
         <button class="pm-link" onclick="GuardIAPremium.cerrar()">Ahora no</button>
         <div id="pm-debug" style="display:none; margin-top:14px; border-top:1px dashed #ccc; padding-top:10px;">
@@ -2418,20 +2419,79 @@ function calcularRTPA() {
 
 <script>
 /* === GuardIA Premium (candado solo en la app Android; la web no se toca) ===
-   Paso 2: candado + pantalla. Las compras reales (Google Play Billing) se conectan en el paso 3.
+   Candado + compra de la suscripción con Google Play Billing (plugin capacitor-plugin-cdv-purchase,
+   empaquetado en purchases.js, que solo se carga dentro de la app).
+   Producto en Play Console: guardia_premium, con planes base de 1 mes y de 1 año.
    IMPORTANTE ANTES DE PUBLICAR EN GOOGLE PLAY: poner DEBUG_PREMIUM = false. */
 const GuardIAPremium = (function () {
-    const DEBUG_PREMIUM = true;
+    const DEBUG_PREMIUM = false;
     const GRATIS = ['calcularGlasgow'];   // calculadoras que quedan libres para todos
     const KEY = 'guardia_premium_test';
+    const PRODUCTO = 'guardia_premium';
+    const K_HASTA = 'guardia_premium_hasta';           // hasta cuándo se acepta el premium guardado (sin conexión)
+    const GRACIA_MS = 7 * 24 * 60 * 60 * 1000;         // 7 días
+    var G = null, tienda = null, producto = null, ofertas = { mensual: null, anual: null };
 
     function esApp() {
         try { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); }
         catch (e) { return false; }
     }
+    function premiumGuardado() { try { return Number(localStorage.getItem(K_HASTA) || 0) > Date.now(); } catch (e) { return false; } }
+    function guardarPremium() { try { localStorage.setItem(K_HASTA, String(Date.now() + GRACIA_MS)); } catch (e) {} }
     function esPremium() {
-        // Paso 3: acá se consultará a Google Play si la suscripción está activa.
-        try { return DEBUG_PREMIUM && localStorage.getItem(KEY) === '1'; } catch (e) { return false; }
+        try { if (DEBUG_PREMIUM && localStorage.getItem(KEY) === '1') return true; } catch (e) {}
+        return premiumGuardado();
+    }
+
+    /* --- Tienda: se conecta con Google Play solo dentro de la app --- */
+    function cargarTienda() {
+        var s = document.createElement('script');
+        s.src = 'purchases.js'; s.onload = iniciarTienda; s.onerror = function () {};
+        document.head.appendChild(s);
+    }
+    function iniciarTienda() {
+        G = window.GuardIAStore; if (!G) return;
+        tienda = G.store;
+        try {
+            tienda.register([{ id: PRODUCTO, type: G.ProductType.PAID_SUBSCRIPTION, platform: G.Platform.GOOGLE_PLAY }]);
+            tienda.when()
+                .productUpdated(function () { armarOfertas(); revisarEstado(); })
+                .approved(function (t) { t.finish(); })              // confirma (acknowledge) la compra ante Google
+                .finished(function () { revisarEstado(true); })
+                .receiptsReady(function () { revisarEstado(); });
+            tienda.error(function () {});
+            tienda.initialize([G.Platform.GOOGLE_PLAY]);
+        } catch (e) {}
+    }
+    /* Si Google informa que la suscripción está activa, se renueva el permiso guardado.
+       Si no hay conexión, el permiso guardado alcanza hasta GRACIA_MS. */
+    function revisarEstado(avisar) {
+        try {
+            var p = tienda.get(PRODUCTO, G.Platform.GOOGLE_PLAY);
+            if (p && tienda.owned(p)) {
+                var eraPremium = esPremium();
+                guardarPremium(); actualizarBotones();
+                if (avisar || !eraPremium) { cerrar(); if (avisar) alert('¡Listo! GuardIA Premium está activo.'); }
+            }
+        } catch (e) {}
+    }
+    function periodoDe(o) { var f = o.pricingPhases || []; return f.length ? f[f.length - 1].billingPeriod : ''; }
+    function tienePrueba(o) { return (o.pricingPhases || []).some(function (f) { return f.paymentMode === 'FreeTrial'; }); }
+    function armarOfertas() {
+        try {
+            producto = tienda.get(PRODUCTO, G.Platform.GOOGLE_PLAY); if (!producto) return;
+            ofertas = { mensual: null, anual: null };
+            (producto.offers || []).forEach(function (o) {
+                var k = periodoDe(o) === 'P1M' ? 'mensual' : (periodoDe(o) === 'P1Y' ? 'anual' : null);
+                if (!k) return;
+                if (!ofertas[k] || (tienePrueba(o) && !tienePrueba(ofertas[k]))) ofertas[k] = o;   // se prefiere la oferta con prueba gratis
+            });
+            ['mensual', 'anual'].forEach(function (k) {
+                var o = ofertas[k], b = document.getElementById('pm-' + k); if (!o || !b) return;
+                var precio = o.pricingPhases[o.pricingPhases.length - 1].price;
+                b.textContent = (k === 'mensual' ? 'Plan mensual: ' + precio + ' por mes' : 'Plan anual: ' + precio + ' por año') + (tienePrueba(o) ? ' (con prueba gratis)' : '');
+            });
+        } catch (e) {}
     }
     function bloqueado(nombre) { return esApp() && !esPremium() && GRATIS.indexOf(nombre) === -1; }
 
@@ -2461,11 +2521,23 @@ const GuardIAPremium = (function () {
         actualizarBotones();
     }
 
-    window.addEventListener('load', proteger);
+    window.addEventListener('load', function () { proteger(); if (esApp()) cargarTienda(); });
 
     return {
-        comprar: function (plan) { alert('Las compras se activan en el próximo paso (plan ' + plan + ').'); },
-        restaurar: function () { alert('Restaurar compra se activa en el próximo paso.'); },
+        comprar: function (plan) {
+            var o = ofertas[plan];
+            if (!tienda || !o) { alert('Las compras no están disponibles en este momento. Revisá tu conexión e intentá de nuevo.'); return; }
+            tienda.order(o).then(function (err) {
+                if (err && err.code !== G.ErrorCode.PAYMENT_CANCELLED) alert('No se pudo completar la compra. Intentá de nuevo.');
+            });
+        },
+        restaurar: function () {
+            if (!tienda) { alert('Las compras no están disponibles en este momento.'); return; }
+            tienda.restorePurchases().then(function () {
+                revisarEstado();
+                if (!esPremium()) alert('No encontramos una suscripción activa en tu cuenta de Google Play.');
+            });
+        },
         setTest: function (v) { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {} cerrar(); actualizarBotones(); },
         cerrar: cerrar,
         debug: DEBUG_PREMIUM && esApp(),
