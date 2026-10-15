@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es-AR">
 <head>
     <meta charset="UTF-8">
@@ -92,6 +92,8 @@
         .m-theme button { background: transparent; border: 1px solid var(--input-bd); color: var(--dark); border-radius: 99px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; }
         .m-theme button.on { background: var(--primary-btn); border-color: var(--primary-btn); color: #fff; }
         .m-empty { text-align: center; color: var(--muted); padding: 24px 0; }
+        .cu-row { display: flex; gap: 10px; }
+        .cu-row > .input-group { flex: 1; min-width: 0; }
         #view-menu.m-searching .m-sec.m-closed .m-row { display: flex; }
         #view-menu.m-searching .m-sec.m-closed .m-sec-head { border-bottom: 2px solid var(--secondary); padding-bottom: 8px; margin-bottom: 12px; }
     </style>
@@ -155,6 +157,7 @@
         <button class="btn btn-outline" onclick="nav('view-pancreatitis')">Pancreatitis Aguda</button>
         <button class="btn btn-outline" onclick="nav('view-hda')">Hemorragia Digestiva Alta</button>
         <button class="btn btn-outline" onclick="nav('view-hdb')">Hemorragia Digestiva Baja</button>
+        <button class="btn btn-outline" onclick="nav('view-colitis')">Colitis Ulcerosa (Reactivación)</button>
     </div>
     <div class="card">
         <h2>Enfermedades Infecciosas</h2>
@@ -417,6 +420,7 @@
                 <li><b>Disnea:</b> <i>The Dyspnea Clinic: a new emerging interdisciplinary medical concept.</i> European Journal of Heart Failure, 2026.</li>
                 <li><b>Hemorragia Digestiva:</b> <i>ACG Clinical Guideline (HDA)</i> / <i>BSG guidelines (HDB - Score de Oakland).</i></li>
                 <li><b>Pancreatitis Aguda:</b> <i>Clasificación Modificada de Atlanta.</i></li>
+                <li><b>Colitis Ulcerosa:</b> <i>ACG Clinical Guideline Update: Ulcerative Colitis in Adults</i> (Am J Gastroenterol, 2025) / <i>AGA Clinical Practice Guidelines on Moderate to Severe UC</i> (2020) / <i>ECCO Guidelines on Therapeutics in UC</i> (2022).</li>
                 <li><b>Cirrosis:</b> <i>EASL Clinical Practice Guidelines.</i></li>
             </ul>
         </details>
@@ -1369,6 +1373,112 @@
     </div>
 </div>
 
+<div class="container hidden" id="view-colitis">
+    <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
+    <div class="card">
+        <h2>Reactivación de Colitis Ulcerosa (CU)</h2>
+        <div class="alert alert-warning" style="display:block; margin-bottom:15px;">
+            <b>Paso Obligatorio (Guardia):</b> Toda reactivación es una <b>infección hasta que se demuestre lo contrario</b>. Antes de escalar inmunosupresión: Toxina/PCR <b>C. difficile</b> + Coprocultivo + Parasitológico. En CU grave o corticorrefractaria: <b>biopsias para CMV</b>.<br>
+            <span class="note">Pesquisar gatillos: AINEs, ATB recientes, abandono de 5-ASA, cesación tabáquica.</span>
+        </div>
+
+        <details open>
+            <summary>1. Definición y Gatillos</summary>
+            <ul>
+                <li><b>Reactivación:</b> Reaparición de rectorragia, aumento de deposiciones, urgencia o tenesmo en paciente con CU conocida en remisión.</li>
+                <li><b>Laboratorio inicial:</b> Hemograma, PCR, VSG, albúmina, ionograma (K, Mg), función renal y hepática. Calprotectina fecal para seguimiento.</li>
+                <li><b>Imágenes:</b> Rx de abdomen en CU grave para descartar <b>megacolon tóxico</b> (colon transverso &gt; 5.5-6 cm).</li>
+                <li><b>Endoscopía:</b> En CU aguda grave, rectosigmoidoscopía flexible sin preparación, idealmente &lt; 24 hs (máx 72 hs): severidad + biopsias CMV. Evitar VCC completa.</li>
+            </ul>
+        </details>
+
+        <h3>2. Calculadora de Severidad (Truelove-Witts)</h3>
+        <p class="note">Define el lugar de tratamiento. CU grave = ≥ 6 deposiciones con sangre/día + al menos 1 signo de toxicidad sistémica (FC &gt; 90, T &gt; 37.8 °C, Hb &lt; 10.5, VSG &gt; 30 o PCR &gt; 30 mg/L).</p>
+        <div class="input-group"><label for="tw_dep">Deposiciones/día:</label><input type="number" id="tw_dep" min="0" inputmode="numeric"></div>
+        <div class="input-group"><label for="tw_sangre">Sangre en materia fecal:</label>
+            <select id="tw_sangre"><option value="0">Ausente / escasa</option><option value="1">Intermitente</option><option value="2">Frecuente / abundante</option></select></div>
+        <div class="cu-row">
+            <div class="input-group"><label for="tw_fc">FC (lpm):</label><input type="number" id="tw_fc" inputmode="numeric"></div>
+            <div class="input-group"><label for="tw_t">Temperatura (°C):</label><input type="number" id="tw_t" step="0.1" inputmode="decimal"></div>
+        </div>
+        <div class="cu-row">
+            <div class="input-group"><label for="tw_hb">Hb (g/dL):</label><input type="number" id="tw_hb" step="0.1" inputmode="decimal"></div>
+            <div class="input-group"><label for="tw_vsg">VSG (mm/h):</label><input type="number" id="tw_vsg" inputmode="numeric"></div>
+        </div>
+        <div class="input-group"><label for="tw_pcr">PCR (mg/L), opcional: puede reemplazar a la VSG:</label><input type="number" id="tw_pcr" step="0.1" inputmode="decimal"></div>
+        <button class="btn btn-outline" onclick="calcularTrueloveWitts()">Calcular Severidad</button>
+        <div id="tw_res" class="alert"></div>
+
+        <h3 style="margin-top:25px;">3. Calculadora Mayo Parcial (Actividad Clínica)</h3>
+        <p class="note">Score no invasivo (0-9). Útil para seguimiento ambulatorio y respuesta al tratamiento. Las bandas de severidad son orientativas: las guías no las definen.</p>
+        <div class="input-group"><label for="my_dep">Frecuencia de deposiciones:</label>
+            <select id="my_dep"><option value="0">0 - Normal para el paciente</option><option value="1">1 - 1 a 2 más de lo normal</option><option value="2">2 - 3 a 4 más de lo normal</option><option value="3">3 - 5 o más de lo normal</option></select></div>
+        <div class="input-group"><label for="my_san">Rectorragia:</label>
+            <select id="my_san"><option value="0">0 - Sin sangre</option><option value="1">1 - Estrías en menos de la mitad</option><option value="2">2 - Sangre evidente en la mayoría</option><option value="3">3 - Sangre sola (sin materia fecal)</option></select></div>
+        <div class="input-group"><label for="my_glob">Evaluación global del médico:</label>
+            <select id="my_glob"><option value="0">0 - Normal</option><option value="1">1 - Enfermedad leve</option><option value="2">2 - Enfermedad moderada</option><option value="3">3 - Enfermedad grave</option></select></div>
+        <button class="btn btn-outline" onclick="calcularMayoParcial()">Calcular Mayo Parcial</button>
+        <div id="my_res" class="alert"></div>
+
+        <details style="margin-top:25px;">
+            <summary>4. Tratamiento según Severidad (Leve a Moderada - Ambulatorio)</summary>
+            <ul>
+                <li><b>Proctitis:</b> Mesalazina supositorio 1 g/día. Alternativa: corticoide tópico.</li>
+                <li><b>Colitis izquierda:</b> Enema de mesalazina 1 g/día + Mesalazina VO 2.4 a 4.8 g/día. <i>La combinación oral + tópica supera a cada una sola.</i></li>
+                <li><b>Colitis extensa:</b> Mesalazina VO 2.4 a 4.8 g/día (dosis única diaria) ± enema.</li>
+                <li><b>Sin respuesta a 5-ASA en 2-4 semanas:</b> Budesonida MMX 9 mg/día por 8 semanas, o Prednisona 40 mg/día VO con descenso de 5 mg/semana.</li>
+                <li><b>Corticodependencia o 2° curso de corticoides en el año:</b> Derivar a Gastroenterología para terapia avanzada (biológicos / moléculas pequeñas). <i>Los corticoides NO sirven para mantenimiento.</i></li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>5. CU Aguda Grave (Internación)</summary>
+            <ul>
+                <li><b>Corticoide IV:</b> Metilprednisolona 60 mg/día IV (ACG 2025). Alternativa: Hidrocortisona 100 mg IV c/6-8 hs (3 a 4 veces por día). <i>Dosis mayores a 60 mg no aportan beneficio.</i> No retrasar a la espera de cultivos.</li>
+                <li><b>Tromboprofilaxis OBLIGATORIA:</b> Enoxaparina 40 mg SC/día. <i>La rectorragia NO la contraindica</i> (riesgo de TEV triplicado en el brote).</li>
+                <li><b>Soporte:</b> Hidratación, corregir K y Mg (la hipokalemia favorece megacolon). Hb &lt; 7-8 g/dL: transfundir. Nutrición oral o enteral si tolera; evitar la nutrición parenteral total solo para reposo intestinal (ACG 2025).</li>
+                <li><b>Suspender:</b> AINEs, opioides, anticolinérgicos y antidiarreicos (loperamida) por riesgo de megacolon tóxico. <b>5-ASA:</b> no es tratamiento del brote grave; suspenderla si el inicio fue reciente y se sospecha hipersensibilidad paradójica.</li>
+                <li><b>Interconsulta precoz:</b> Gastroenterología y Cirugía desde el ingreso.</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>6. Antibióticos: ¿Cuándo SÍ y cuándo NO?</summary>
+            <p><b>NO usar de rutina</b> en CU aguda grave sin infección (ACG 2025, recomendación fuerte). Los ECA no mostraron reducción de colectomía ni mejor respuesta al día 3. Reservarlos para sospecha de complicación extraluminal o toxicidad sistémica.</p>
+            <ul>
+                <li><b>C. difficile positivo:</b> Vancomicina 125 mg VO c/6 hs por 10 días, o Fidaxomicina 200 mg VO c/12 hs. <i>NO suspender el corticoide ni el tratamiento de la CU.</i> Evitar metronidazol como monoterapia.</li>
+                <li><b>Megacolon tóxico, sospecha de perforación o absceso:</b> ATB de amplio espectro IV (Piperacilina-Tazobactam 4.5 g c/6 hs, o Ceftriaxona 2 g/día + Metronidazol 500 mg c/8 hs) + Cirugía URGENTE.</li>
+                <li><b>Sepsis / fiebre sin foco claro en inmunosuprimido:</b> Tratar según protocolo de Sepsis.</li>
+                <li><b>Coprocultivo positivo:</b> Tratamiento dirigido según germen.</li>
+                <li><b>CMV en biopsia (alta carga) + corticorrefractario:</b> Ganciclovir 5 mg/kg IV c/12 hs.</li>
+                <li><b>Perioperatorio:</b> Profilaxis quirúrgica estándar.</li>
+            </ul>
+        </details>
+
+        <h3 style="margin-top:25px;">7. Calculadora Criterios de Oxford (Día 3)</h3>
+        <p class="note">Evaluar al 3° día de corticoide IV. Predice falla al tratamiento y necesidad de rescate o colectomía.</p>
+        <div class="input-group"><label for="ox_dep">Deposiciones en las últimas 24 hs (día 3):</label><input type="number" id="ox_dep" min="0" inputmode="numeric"></div>
+        <div class="cu-row">
+            <div class="input-group"><label for="ox_pcr">PCR:</label><input type="number" id="ox_pcr" step="0.1" inputmode="decimal"></div>
+            <div class="input-group"><label for="ox_unit">Unidad del laboratorio:</label>
+                <select id="ox_unit"><option value="mgL">mg/L</option><option value="mgdL">mg/dL</option></select></div>
+        </div>
+        <button class="btn btn-outline" onclick="calcularOxford()">Evaluar Respuesta Día 3</button>
+        <div id="ox_res" class="alert"></div>
+
+        <details style="margin-top:25px;">
+            <summary>8. Terapia de Rescate (Sin respuesta al corticoide IV al día 3)</summary>
+            <table>
+                <tr><th>Opción</th><th>Dosis / Comentario</th></tr>
+                <tr><td><b>Infliximab</b></td><td>5 mg/kg IV semanas 0-2-6. Considerar 10 mg/kg en la 1ª dosis solo si albúmina &lt; 2.5 g/dL (evidencia limitada: un ECA no mostró diferencia global). Descartar TBC (PPD/IGRA + Rx) y Hepatitis B antes.</td></tr>
+                <tr><td><b>Ciclosporina</b></td><td>2 mg/kg/día IV infusión continua. Controlar niveles, TA, función renal. <i>Riesgo de convulsiones si Mg o colesterol bajos.</i> Puente a tiopurinas o vedolizumab.</td></tr>
+                <tr><td><b>Inhibidores JAK</b></td><td>Tofacitinib / Upadacitinib: datos insuficientes para uso de rutina tras falla de corticoide IV o infliximab (ACG 2025). Solo en casos muy seleccionados, con rescate convencional y cirugía contraindicados; decisión del especialista.</td></tr>
+                <tr><td><b>Colectomía</b></td><td>Sin respuesta al rescate en 5-7 días, megacolon tóxico refractario, perforación o hemorragia masiva. <i>Retrasar la cirugía aumenta la morbimortalidad.</i></td></tr>
+            </table>
+        </details>
+    </div>
+</div>
+
 <div class="container hidden" id="view-nac">
     <button class="btn btn-back" onclick="nav('view-menu')">← Volver al Menú</button>
     <div class="card">
@@ -2213,6 +2323,70 @@ function calcularRTPA() {
             res.className = 'alert alert-success';
         }
         res.style.display = 'block';
+    }
+
+    /* ===== Colitis Ulcerosa (Reactivación): Truelove-Witts, Mayo parcial, Oxford día 3 ===== */
+    function cuMostrar(id, clase, html) {
+        var el = document.getElementById(id);
+        el.className = 'alert alert-' + ({ ok: 'success', warn: 'warning', bad: 'danger' })[clase];
+        el.innerHTML = html;
+        el.style.display = 'block';
+    }
+    function cuNum(id) {
+        var v = parseFloat(document.getElementById(id).value);
+        return isNaN(v) ? null : v;
+    }
+
+    function calcularTrueloveWitts() {
+        var dep = cuNum('tw_dep');
+        var sangre = parseInt(document.getElementById('tw_sangre').value, 10);
+        var fc = cuNum('tw_fc'), t = cuNum('tw_t'), hb = cuNum('tw_hb'), vsg = cuNum('tw_vsg'), pcr = cuNum('tw_pcr');
+        if (dep === null) { cuMostrar('tw_res', 'warn', 'Ingresá al menos la cantidad de deposiciones/día.'); return; }
+
+        var toxicos = [];
+        if (fc !== null && fc > 90) toxicos.push('FC &gt; 90');
+        if (t !== null && t > 37.8) toxicos.push('T &gt; 37.8 °C');
+        if (hb !== null && hb < 10.5) toxicos.push('Hb &lt; 10.5');
+        if (vsg !== null && vsg > 30) toxicos.push('VSG &gt; 30');
+        if (pcr !== null && pcr > 30) toxicos.push('PCR &gt; 30 mg/L');
+
+        var faltan = [fc, t, hb].some(function (x) { return x === null; }) || (vsg === null && pcr === null);
+        var aviso = faltan ? '<br><small>Faltan datos sistémicos: el resultado puede subestimar la severidad.</small>' : '';
+
+        if (dep >= 6 && sangre >= 1 && toxicos.length >= 1) {
+            cuMostrar('tw_res', 'bad', '<b>CU AGUDA GRAVE</b> (' + toxicos.join(', ') + ').<br>Internación. Corticoide IV + tromboprofilaxis. Rectosigmoidoscopía con biopsias CMV. Interconsulta GE y Cirugía. Reevaluar al día 3 (Oxford).' + aviso);
+        } else if (dep < 4 && toxicos.length === 0) {
+            cuMostrar('tw_res', 'ok', '<b>CU LEVE</b>.<br>Manejo ambulatorio con 5-ASA oral ± tópico según extensión.' + aviso);
+        } else {
+            cuMostrar('tw_res', 'warn', '<b>CU MODERADA</b>' + (toxicos.length ? ' (' + toxicos.join(', ') + ')' : '') + '.<br>Ambulatorio si tolera VO y sin toxicidad: 5-ASA a dosis plena; si no responde, budesonida MMX o prednisona 40 mg/día. Control estrecho en 48-72 hs.' + aviso);
+        }
+    }
+
+    function calcularMayoParcial() {
+        var s = parseInt(document.getElementById('my_dep').value, 10)
+              + parseInt(document.getElementById('my_san').value, 10)
+              + parseInt(document.getElementById('my_glob').value, 10);
+        var rectorragia = parseInt(document.getElementById('my_san').value, 10);
+        var txt, cls;
+        if (s <= 1 && rectorragia === 0) { txt = 'Remisión clínica'; cls = 'ok'; }
+        else if (s <= 1) { txt = 'Actividad mínima: no cumple remisión (persiste rectorragia)'; cls = 'ok'; }
+        else if (s <= 4) { txt = 'Actividad LEVE'; cls = 'ok'; }
+        else if (s <= 6) { txt = 'Actividad MODERADA'; cls = 'warn'; }
+        else { txt = 'Actividad GRAVE: evaluar criterios de Truelove-Witts e internación'; cls = 'bad'; }
+        cuMostrar('my_res', cls, '<b>Mayo parcial: ' + s + '/9</b> - ' + txt + '.<br><small>Referencia de ensayos clínicos: remisión = Mayo parcial ≤ 1 con rectorragia 0. Respuesta = descenso ≥ 2 puntos con mejoría de la rectorragia (≥ 1 punto, o rectorragia 0-1). Bandas de severidad orientativas.</small>');
+    }
+
+    function calcularOxford() {
+        var dep = cuNum('ox_dep'), pcr = cuNum('ox_pcr');
+        if (dep === null || pcr === null) { cuMostrar('ox_res', 'warn', 'Completá deposiciones y PCR.'); return; }
+        var pcrMgL = document.getElementById('ox_unit').value === 'mgdL' ? pcr * 10 : pcr;
+        if (dep > 8 || (dep >= 3 && pcrMgL > 45)) {
+            cuMostrar('ox_res', 'bad', '<b>CRITERIOS DE OXFORD POSITIVOS</b> (PCR ' + pcrMgL.toFixed(0) + ' mg/L).<br>~85% de riesgo de colectomía en la internación. Indicar <b>terapia de rescate</b> (Infliximab o Ciclosporina) y revaluar con Cirugía. Confirmar C. difficile y CMV negativos.');
+        } else if (dep >= 3) {
+            cuMostrar('ox_res', 'warn', '<b>Respuesta parcial</b> (PCR ' + pcrMgL.toFixed(0) + ' mg/L).<br>No cumple Oxford, pero persiste actividad. Continuar corticoide IV y revaluar diariamente (día 5-7).');
+        } else {
+            cuMostrar('ox_res', 'ok', '<b>Buena respuesta al corticoide IV</b>.<br>Planificar pasaje a Prednisona VO 40 mg/día con descenso progresivo y estrategia de mantenimiento con Gastroenterología.');
+        }
     }
 
     function calcularBISAP() {
