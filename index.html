@@ -19,6 +19,13 @@
             return { get: get, set: set };
         })();
     </script>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1A5F7A">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="GuardIA">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #1A5F7A; --primary-btn: #1A5F7A; --primary-dark: #113f52; --heading: #113f52; --secondary: #eef2f5; --danger: #e63946; --success: #2a9d8f; --warning: #e9c46a; --dark: #2b2d42; --bg-color: #f4f7f6; --card-bg: #ffffff; --input-bg: #f9fafb; --input-bd: #d1d5db; --det-bg: #f8f9fa; --det-bd: #e9ecef; --det-text: #4a4a4a; --th-bg: #e9ecef; --td-bd: #dee2e6; --muted: #6c757d; --card-bd: rgba(0,0,0,0.05); --chip-bg: #eaf2f5; --star: #d99a1c; }
@@ -2861,6 +2868,44 @@ const GuardIAPremium = (function () {
     };
 
     armarFavoritos(); armarRecientes();
+})();
+</script>
+<script>
+/* === Versión web instalable (PWA). No hace nada dentro de la app de Android. === */
+(function () {
+    var nativa = false;
+    try { nativa = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); } catch (e) {}
+    if (nativa) return;
+
+    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+        window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    }
+
+    var yaInstalada = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+    if (yaInstalada) return;
+
+    var menu = document.getElementById('view-menu'), fila = null, evento = null;
+    function filaInstalar() {
+        if (fila || !menu) return fila;
+        fila = document.createElement('div'); fila.className = 'm-theme';
+        fila.style.flexWrap = 'wrap'; menu.appendChild(fila); return fila;
+    }
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault(); evento = e;
+        var f = filaInstalar(); if (!f) return;
+        f.innerHTML = '';
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'on';
+        b.textContent = 'Instalar GuardIA en tu celular';
+        b.onclick = function () { if (evento) { evento.prompt(); evento = null; f.style.display = 'none'; } };
+        f.appendChild(b);
+    });
+    window.addEventListener('appinstalled', function () { if (fila) fila.style.display = 'none'; });
+
+    /* iPhone/iPad no ofrece el botón automático: se muestra la indicación manual */
+    if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+        var f = filaInstalar();
+        if (f) { f.textContent = 'Para instalarla en iPhone: tocá Compartir y luego "Agregar a inicio".'; }
+    }
 })();
 </script>
 </body>
